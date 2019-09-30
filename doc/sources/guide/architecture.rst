@@ -1,203 +1,171 @@
 .. _architecture:
 
-Architectural Overview
+架构概况
 ======================
 
-We would like to take a moment to explain how we designed Kivy from a
-software engineering point of view. This is key to understanding how
-everything works together.
-If you just look at the code, chances are you will get a rough idea
-already, but since this approach certainly is daunting for most users,
-this section explains the basic ideas of the implementation in more detail.
-You can skip this section and refer to it later, but we suggest at least
-skimming it for a rough overview.
+我们喜欢花一些时间来解释我们是如何设计 Kivy 框架的，
+从软件工程的角度来说明。这是理解 Kivy 是如何工作的关键点。
+如果你只看代码的话，各种各样的写法会让你感到思路混乱，
+这对大多数用户来说都会因产生恐惧而失去阅读的兴趣。
+本篇文档就是解释一下实现 Kivy 框架的基础思路，涉及更多细节。
+你可以跳过这部分，稍后再看也可以，但我们建议至少要了解概况中的内容。
 
-Kivy consists of several building blocks that we will explain shortly. Here is a
-graphical summary of the architecture:
+Kivy 的组成简言之是由许多块搭建起来的。下面是架构的一个汇总图示：
 
 .. image:: ../images/architecture.png
     :align: center
 
 .. _providers:
 
-Core Providers and Input Providers
+内核与输入供应器
 ----------------------------------
 
-One idea that is key to understanding Kivy's internals is that of modularity and
-abstraction. We try to abstract basic tasks such as opening a window,
-displaying images and text, playing audio, getting images from a camera,
-spelling correction and so on. We call these *core* tasks.
-This makes the API both easy to use and easy to extend. Most importantly, it
-allows us to use -- what we call -- specific providers for the respective
-scenarios in which your app is being run.
-For example, on OSX, Linux and Windows, there are different native APIs for the
-different core tasks. A piece of code that uses one of these specific APIs to
-talk to the operating system on one side and to Kivy on the other (acting as an
-intermediate communication layer) is what we call a *core provider*.
-The advantage of using specialized core providers for each platform is that we
-can fully leverage the functionality exposed by the operating system and act as
-efficiently as possible. It also gives users a choice. Furthermore, by using
-libraries that are shipped with any one platform, we effectively reduce the size
-of the Kivy distribution and make packaging easier. This also makes it easier to port
-Kivy to other platforms. The Android port benefited greatly from this.
+理解 Kivy 的内幕是一个关键思路，因为内部都是模块化和抽象的过程。
+我们尽力提取出基础部分，例如打开一个窗口显示图片和文本，播放音频，
+从摄像头获得图像，拼写纠错，等等任务。我们把这些都叫做 *内核* 任务。
+有了内核就可以让 API 简单实用了，并且可以扩展 API。最重要的就是
+内核允许我们使用所说的具体供应器，每个供应器都是支持着应用运行中各自的情景。
+例如，在 OSX, Linux 和 Windows 三大操作系统上，原生的 APIs 对不同的
+内核任务都是不一样的。针对不同操作系统都是不同的代码片段支持着具体的
+APIs 与每个操作系统进行单向通信。并且与 Kivy 的通信是在另一边（扮演
+了一种中间通信层），我们叫它 *内核供应器*。
+使用特殊的内核供应器，对于每种操作系统来说都是有优势的，因为我们可以
+完全平衡操作系统曝光的功能，并且尽可能有效率地执行。
+内核也让用户自行选择。更进一步来说，通过使用一些针对一个操作系统而
+移植的库，我们有效地减小了 Kivy 应用的分发体积，并且打包更容易了。
+这也让 Kivy 程序变成任何一个操作系统上的应用更加容易。移植成安卓应用
+在这里得到了很棒的好处。
 
-We follow the same concept with input handling. *An input provider* is a piece
-of code that adds support for a specific input device, such as Apple's
-trackpads, TUIO or a mouse emulator.
-If you need to add support for a new input device, you can simply provide a new
-class that reads your input data from your device and transforms them into Kivy
-basic events.
+我们遵循了相同的输入处理概念。*输入供应器* 就是一段代码，它增加了对
+具体输入设备的支持，例如，苹果的触摸板，TUIO 或 一个鼠标模拟器。
+如果你需要增加新的输入设备支持，你可以直接写一个新类，用这个新类来
+读取输入数据后把输入数据转换成 Kivy 的基础事件。
 
 
-Graphics
+显卡
 --------
 
-Kivy's graphics API is our abstraction of OpenGL. On the lowest level,
-Kivy issues hardware-accelerated drawing commands using OpenGL. Writing
-OpenGL code however can be a bit confusing, especially to newcomers.
-That's why we provide the graphics API that lets you draw things using
-simple metaphors that do not exist as such in OpenGL (e.g. Canvas,
-Rectangle, etc.).
+Kivy 的显卡 API 是我们的 OpenGL 抽象部署。在最底层上，
+Kivy 释放了硬件加速，使用 OpenGL 来实现绘制命令。在写
+OpenGL 代码时，不管如何做到的，对于新手来说会有一点稀里糊涂。
+这也就是为什么我们要提供显卡 API 给用户，让你们绘图时直接使用
+而这些用法实际上在 OpenGL 驱动里并不存在（例如Canvas、Rectangle等等）。
 
-All of our widgets themselves use this graphics API, which is implemented
-on the C level for performance reasons.
+我们所有的挂件自身也是使用显卡 API 来实现，因为 API 是用 C 语言写的，
+因为只有 C 语言可以直接识别硬件。
 
-Another advantage of the graphics API is its ability to automatically
-optimize the drawing commands that your code issues. This is especially
-helpful if you're not an expert at tuning OpenGL. This makes your drawing
-code more efficient in many cases.
+另外显卡 API 的优势还有其自身自动优化的能力，你写的 Python 代码自动
+优化成驱动绘制命令。这是特别有帮助的，因为如果你不是硬件 OpenGL 专家的话，
+在微调硬件上就是一筹莫展。而 Kivy 的显卡 API 给 Python 提供了更效率地绘制能力。
 
-You can, of course, still use raw OpenGL commands if you prefer. The
-version we target is OpenGL 2.0 ES (GLES2) on all devices, so if you want to
-stay cross-platform compatible, we advise you to only use the GLES2 functions.
+当然你可以继续使用原始的 OpenGL 命令，如果你熟悉的话。显卡驱动的版本是
+ OpenGL 2.0 ES (GLES2) ，这会作用在所有显卡上，所以如果你想要保持跨
+平台的兼容能力，我们建议你只使用这个 GLES2 驱动提供的函数。
 
 
-Core
+内核
 ----
 
-The code in the core package provides commonly used features, such as:
+在内核包中的代码提供了共性，例如：
 
     Clock
-        You can use the clock to schedule timer events. Both one-shot timers
-        and periodic timers are supported.
+        时钟是你用来安排事件什么时候发生的。同时支持一次性和周期性事件时钟设置。
 
     Cache
-        If you need to cache something that you use often, you can use our
-        class for that instead of writing your own.
+        如果你需要缓存你经常用的事物，你可以使用我们的类，这样就不用你自己再写了。
 
     Gesture Detection
-        We ship a simple gesture recognizer that you can use to detect
-        various kinds of strokes, such as circles or rectangles. You can
-        train it to detect your own strokes.
+        我们直接把手势识别集成在一起，你可以用来检测各种触摸屏上的操作。
+        例如，用手指画圆或四边形。你也可以用你自己的手势来训练手势检测器。
 
     Kivy Language
-        The kivy language is used to easily and efficiently describe user
-        interfaces.
+        我们提供了 kivy 语言接口给用户，这是一种外观设计语言，对用户来说简单实用并有效率。
 
     Properties
-        These are not the normal properties that you may know from python.
-        They are our own property classes that link your widget code with
-        the user interface description.
+        Kivy 中没有 Python 语言里的那些属性值。这里有我们自己的属性类，
+        这些属性类把你的挂件代码连接到用户接口描述上。
 
 
-UIX (Widgets & Layouts)
+UIX (挂件与图层的合称)
 -----------------------
 
-The UIX module contains commonly used widgets and layouts that you can
-reuse to quickly create a user interface.
+在 uix 包中含有共性的挂件和图层类，这都是你可以重复使用来快速建立用户接口的。
 
     Widgets
-        Widgets are user interface elements that you add to your program
-        to provide some kind of functionality. They may or may not be
-        visible. Examples would be a file browser, buttons, sliders, lists
-        and so on. Widgets receive MotionEvents.
+        挂件类都是用户接口元素，也就是要用在你的应用程序中提供一些功能。
+        其中有些类是可见的，有的不是。例如一个文件浏览器、按钮、滑条、列表，
+        等等功能。挂件类是可以接收运动事件类的。
 
     Layouts
-        You use layouts to arrange widgets. It is of course possible to
-        calculate your widgets' positions yourself, but often it is more
-        convenient to use one of our ready made layouts. Examples would be
-        Grid Layouts or Box Layouts.
-        You can also nest layouts.
+        图层是你用来布置挂件用的。当然需要你自己计算挂件的位置坐标了，
+        但常常可以使用我们已经提供给你的一种便利图层。例如，网格图层、
+        盒子图层。你也可以使用嵌入图层方式来布置。
 
 
-Modules
+模块
 -------
 
-If you've ever used a modern web browser and customized it with some
-add-ons then you already know the basic idea behind our module classes.
-Modules can be used to inject functionality into Kivy programs, even if
-the original author did not include it.
+如果你曾经用过一段时间现代网页浏览器的话，你知道可以用一些插件来自定义浏览器。
+那么你理解我们的模块类就容易了，这就是我们模块背后的基础思路。
+`modules` 包中的模块都是用来把功能插入到 Kivy 程序中的，
+如果程序的原作者缺少一个功能，你也可以为程序增加一个功能。
 
-An example would be a module that always shows the FPS of the current
-application and some graph depicting the FPS over time.
+例如，一个模块可以把当前应用的 FPS 值显示在屏幕上，这样你就可以了解
+显卡绘制图像时的 FPS 值情况。
 
-You can also write your own modules.
+你也可以写自己的模块类。
 
 
-Input Events (Touches)
+输入事件 (触摸)
 ----------------------
 
-Kivy abstracts different input types and sources such as touches, mice,
-TUIO or similar. What all of these input types have in common is that you
-can associate a 2D onscreen-position with any individual input event. (There are
-other input devices such as accelerometers where you cannot easily find a
-2D position for e.g. a tilt of your device. This kind of input is handled
-separately. In the following we describe the former types.)
+Kivy 提取了不同的输入类型和资源，例如，touches, mice, TUIO 或类似东西。
+所有这些输入类型的共性是什么？那就是你可以访问一种 2D 屏幕上的坐标点，含有
+每个独立的输入事件。（也有一些其它的输入设备，例如，加速器对你来说不能容易
+找到设备倾斜时的一个 2D 坐标点。这种类型的输入是单独进行处理的。）
 
-All of these input types are represented by instances of the Touch()
-class. (Note that this does not only refer to finger touches, but all the other
-input types as well. We just called it *Touch* for the sake of simplicity.
-Think of it of something that *touches* the user interface or your screen.)
-A touch instance, or object, can be in one of three states. When a touch
-enters one of these states, your program is informed that the event
-occurred.
-The three states a touch can be in are:
+所有这些输入类型都呈现在 Touch() 类的实例中。（注意这里的类名不单是用手指
+触摸的意思，包括所有其它类型。我们这里命名成 *Touch* 是为了简化的目的。
+可以理解成用户可以触及到的许多设备接口或屏幕。）一个触碰实例，或对象，都可以
+位于三种状态。当一个触碰动作进入了这些状态中的一种时，你的程序就会知道有事发生了。
+触碰动作的三个状态是：
 
     Down
-        A touch is down only once, at the very moment where it first
-        appears.
+        只按下一次的动作状态，即第一次出现触碰动作的时刻。
     Move
-        A touch can be in this state for a potentially unlimited time.
-        A touch does not have to be in this state during its lifetime.
-        A 'Move' happens whenever the 2D position of a touch changes.
+        一种潜在的无限次数的触碰动作。
+        一种触碰中不会被迫进入本状态的动作。例如，长按着不放。
+        一种触碰的 2D 坐标点变化时的运动。例如，滑动动作。
     Up
-        A touch goes up at most once, or never.
-        In practice you will almost always receive an up event because
-        nobody is going to hold a finger on the screen for all eternity,
-        but it is not guaranteed. If you know the input sources your users
-        will be using, you will know whether or not you can rely on this
-        state being entered.
+        一种最多抬起一次的触碰动作，不会有第二次抬起。例如，松开按键。
+        实际中你几乎一直接收一种向上事件，因为不碰键盘的时候，或不碰屏幕的时候都是
+        这种情况，但也不是一定的事情。如果你知道你的用户会使用的输入源头，你会知道
+        这种状态是否会有变化。
 
 
-Widgets and Event Dispatching
+挂件与事件调度
 -----------------------------
 
-The term *widget* is often used in GUI programming contexts to describe
-some part of the program that the user interacts with.
-In Kivy, a widget is an object that receives input events. It does not
-necessarily have to have a visible representation on the screen.
-All widgets are arranged in a *widget tree* (which is a tree data structure
-as known from computer science classes): One widget can have any number of
-child widgets or none. There is exactly one *root widget* at the top of the
-tree that has no parent widget, and all other widgets are directly or
-indirectly children of this widget (which is why it's called the root).
+术语*挂件*常常会用在 GUI 编程语境中，是用来描述程序的某一个部分，
+这个部分就是用户与之互动的对象。在 Kivy 中，一个挂件就是一个接收
+输入事件的对象。不是非要显示在屏幕上的。所有挂件都放置在一个*挂件树*上
+（就像圣诞节的圣诞树，不过是一颗数据结构树，这是计算机科学中的一个分支
+课程）：一个挂件可以有任何数量的子挂件，或者什么也没有。但却总有一个
+*根挂件*在树的顶端，根挂件之上就再没有父挂件了，并且所有其它的挂件
+都是根挂件的直接或间接子挂件（这就是著名的树倒栽存活理论，所以叫根）。
 
-When new input data is available, Kivy sends out one event per touch.
-The root widget of the widget tree first receives the event.
-Depending on the state of the touch, the on_touch_down,
-on_touch_move or on_touch_up event is dispatched (with the touch as the
-argument) to the root widget, which results in the root widget's
-corresponding on_touch_down, on_touch_move or on_touch_up event handler
-being called.
+当新的输入数据可用的时候，Kivy 会发送出一个触碰一个事件信号。
+挂件树的根挂件是第一个收到这种事件的对象。根据触碰的状态，
+ on_touch_down, on_touch_move 或 on_touch_up 三个事件
+都会调度（把触碰状态作为参数）给根挂件，根挂件相应的三个事件处理器
+就会被调用而产生结果。
 
-Each widget (this includes the root widget) in the tree can choose to
-either digest or pass the event on. If an event handler returns True,
-it means that the event has been digested and handled properly. No further
-processing will happen with that event. Otherwise, the event handler
-passes the widget on to its own children by calling its superclass's
-implementation of the respective event handler. This goes all the way up
-to the base Widget class, which -- in its touch event handlers -- does
-nothing but pass the touches to its children::
+树上的每个挂件（包括根挂件）即可以选择自行消化事件，也可以选择传递事件。
+如果一个事件处理器返回结果是 `True` 的话，意思就是事件已经被自行消化后
+正确地处理完毕。这个事件不会再有下一步处理。否则，事件处理器会把挂件传递
+给自身的子挂件，这是需要调用自身的各自事件处理的上级类实现的。这种情况会
+向上传递给基类 `Widget` 类，在自身的触碰事件处理器中，什么也不做，只是
+把触碰状态传递给自身子挂件::
 
     # This is analogous for move/up:
     def on_touch_down(self, touch):
@@ -205,15 +173,13 @@ nothing but pass the touches to its children::
             if child.dispatch('on_touch_down', touch):
                 return True
 
-This really is much easier than it first seems. An example of how this can
-be used to create nice applications quickly will be given in the following
-section.
+这要比第一次看起来更容易些。这个例子如何用来建立一个良好的应用，我们会
+在后面的文档中给出介绍。
 
-Often times you will want to restrict the *area* on the screen that a
-widget watches for touches. You can use a widget's collide_point() method
-to achieve this. You simply pass it the touch's position and it returns
-True if the touch is within the 'watched area' or False otherwise. By
-default, this checks the rectangular region on the screen that's described
-by the widget's pos (for position; x & y) and size (width & height), but
-you can override this behaviour in your own class.
+常常你会需要在屏幕上限制这种*区域*，例如一个看守触碰状态的挂件。
+你可以使用一个挂件的 collide_point() 方法来实现这个目的。
+你直接把触碰的位置坐标传递给挂件，然后如果触碰在这个区域内的话，
+挂件返回 `True` 值，否则返回 `False` 值。默认情况，这种检查
+区域是屏幕上的四边形，通过挂件的 `pos` 描述的坐标值（x和y坐标值），
+还有挂件的 `size` （宽和高），但你也可以在自己的类中覆写这种行为。
 
