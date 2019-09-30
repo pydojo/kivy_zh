@@ -1,80 +1,80 @@
 .. _environment:
 
-Controlling the environment
+控制环境变量
 ===========================
 
-Many environment variables are available to control the initialization and
-behavior of Kivy.
+在系统中有许多环境变量是可以使用的，
+环境变量都可以用来控制 Kivy 的初始化过程和行为。
 
-For example, in order to restrict text rendering to the PIL implementation::
+例如，要想限制文字渲染到 PIL 中实现图像效果，
+先要在系统终端里设置环境变量::
 
     $ KIVY_TEXT=pil python main.py
 
-Environment variables should be set before importing kivy::
+环境变量都要在导入 kivy 之前进行设置，
+然后在程序中先引用环境变量再写导入kivy的代码::
 
     import os
     os.environ['KIVY_TEXT'] = 'pil'
     import kivy
 
-Path control
+路径控制的环境变量
 ------------
 
 .. versionadded:: 1.0.7
 
-You can control the default directories where config files, modules
-and kivy data are located.
+你可以控制含有配置文件、模块和 kivy 数据所在的默认目录。
 
 KIVY_DATA_DIR
-    Location of the Kivy data, defaults to `<kivy path>/data`
+    是 Kivy 数据的路径环境变量，默认值是 `<kivy path>/data`
 
 KIVY_MODULES_DIR
-    Location of the Kivy modules, defaults to `<kivy path>/modules`
+    是 Kivy 模块的路径环境变量，默认值是 `<kivy path>/modules`
 
 KIVY_HOME
-    Location of the Kivy home. This directory is used for local configuration,
-    and must be in a writable location.
+    是 Kivy 主目录的路径环境变量，这个目录是提供给本地配置用的，
+    并且必须具有可写权限。
 
-    Defaults to:
-     - Desktop: `<user home>/.kivy`
-     - Android: `<android app path>/.kivy`
-     - iOS: `<user home>/Documents/.kivy`
+    默认值是：
+     - 桌面应用: `<user home>/.kivy`
+     - 安卓应用: `<android app path>/.kivy`
+     - 苹果应用: `<user home>/Documents/.kivy`
 
     .. versionadded:: 1.9.0
 
 KIVY_SDL2_PATH
-    If set, the SDL2 libraries and headers from this path are used when
-    compiling kivy instead of the ones installed system-wide.
-    To use the same libraries while running a kivy app, this path must be
-    added at the start of the PATH environment variable.
+    如果设置这个环境变量的话，来自这个路径的 SDL2 库和头部文件都会被使用，
+    在编译 kivy 是要用到，这样就不会使用安装在系统中的内容。
+    当运行一个 kivy 应用时要使用相同的库，这个路径必须加入到 PATH 环境变量
+    的开头。
 
     .. versionadded:: 1.9.0
 
     .. warning::
 
-        This path is required for the compilation of Kivy. It is not
-        required for program execution.
+        要编译 Kivy 必须要有这个路径。要执行 Kivy 程序不需要这个路径。
 
 
-Configuration
+配置的环境变量
 -------------
 
 KIVY_USE_DEFAULTCONFIG
-    If this name is found in environ, Kivy will not read the user config file.
+    如果在环境变量中有这个名字的话， Kivy 不会读取用户配置的文件。
 
 KIVY_NO_CONFIG
-    If set, no configuration file will be read or written to. This also applies
-    to the user configuration directory.
+    如果设置这个环境变量的话，不会读取配置文件，也不会写配置文件。
+    这个环境变量也会作用在用户配置的目录上。
 
 KIVY_NO_FILELOG
-    If set, logs will be not print to a file
+    如果设置这个环境变量，日志不会输出到文件中。
 
 KIVY_NO_CONSOLELOG
-    If set, logs will be not print to the console
+    如果设置这个环境变量，日志不会输出到终端里。
 
 KIVY_NO_ARGS
-    If set, the argument passed in command line will not be parsed and used by Kivy.
-    Ie, you can safely make a script or an app with your own arguments without
-    requiring the `--` delimiter::
+    如果设置这个环境变量，不会对命令行中的参数进行语法分析，
+    也不会被 Kivy 使用。例如，你可以安全地建立一个脚本或
+    一个含有你自己参数的应用，而不需要用 `--` 来区分参数::
 
         import os
         os.environ["KIVY_NO_ARGS"] = "1"
@@ -83,9 +83,9 @@ KIVY_NO_ARGS
     .. versionadded:: 1.9.0
 
 KCFG_section_key
-    If a such format environment name is detected, it will be mapped
-    to the Config object. They are loaded only once when `kivy` is
-    imported. The behavior can be disabled using `KIVY_NO_ENV_CONFIG`.
+    如果发现这种格式的环境变量名的话，它会映射给 Config 对象。
+    当导入 `kivy` 时只会加载一次。
+    使用 `KIVY_NO_ENV_CONFIG` 可以禁用这种行为。
 
     ::
 
@@ -98,95 +98,94 @@ KCFG_section_key
     .. versionadded:: 1.11.0
 
 KIVY_NO_ENV_CONFIG
-    If set, no environment key will be mapped to configuration object.
-    If unset, any `KCFG_section_key=value` will be mapped to Config.
+    如果设置这个环境变量，不会把环境变量名映射给配置对象。
+    如果不设置的话，
+    任何一个 `KCFG_section_key=value` 键值对儿都会映射给 Config 对象。
 
     .. versionadded:: 1.11.0
 
-Restrict core to specific implementation
+把 kivy 核心限制成具体实现方式的环境变量
 ----------------------------------------
 
-:mod:`kivy.core` try to select the best implementation available for your
-platform. For testing or custom installation, you might want to restrict the
-selector to a specific implementation.
+对于你所使用的操作系统来说 :mod:`kivy.core` 模块会尝试选择最好的可用实现方式。
+对于测试或自定义安装来说，你也许想要把选择器设置成一个具体的实现方式。
 
 KIVY_WINDOW
-    Implementation to use for creating the Window
+    建立窗口的实现方式
 
-    Values: sdl2, pygame, x11, egl_rpi
+    环境变量值有： sdl2, pygame, x11, egl_rpi
 
 KIVY_TEXT
-    Implementation to use for rendering text
+    渲染文本的实现方式
 
-    Values: sdl2, pil, pygame, sdlttf
+    环境变量值有： sdl2, pil, pygame, sdlttf
 
 KIVY_VIDEO
-    Implementation to use for rendering video
+    渲染视频的实现方式
 
-    Values: gstplayer, ffpyplayer, ffmpeg, null
+    环境变量值有： gstplayer, ffpyplayer, ffmpeg, null
 
 KIVY_AUDIO
-    Implementation to use for playing audio
+    播放音频的实现方式
 
-    Values: sdl2, gstplayer, ffpyplayer, pygame, avplayer
+    环境变量值有： sdl2, gstplayer, ffpyplayer, pygame, avplayer
 
 KIVY_IMAGE
-    Implementation to use for reading image
+    读取图片的实现方式
 
-    Values: sdl2, pil, pygame, imageio, tex, dds, gif
+    环境变量值有： sdl2, pil, pygame, imageio, tex, dds, gif
 
 KIVY_CAMERA
-    Implementation to use for reading camera
+    读取摄像头的实现方式
 
-    Values: avfoundation, android, opencv
+    环境变量值有： avfoundation, android, opencv
 
 KIVY_SPELLING
-    Implementation to use for spelling
+    魔法效果的实现方式
 
-    Values: enchant, osxappkit
+    环境变量值有： enchant, osxappkit
 
 KIVY_CLIPBOARD
-    Implementation to use for clipboard management
+    剪贴板管理的实现方式
 
-    Values: sdl2, pygame, dummy, android
+    环境变量值有： sdl2, pygame, dummy, android
 
-Metrics
+度量衡的环境变量
 -------
 
 KIVY_DPI
-    If set, the value will be used for :attr:`Metrics.dpi`.
+    如果设置这个环境变量，变量值会提供给 :attr:`Metrics.dpi` 属性使用。
 
     .. versionadded:: 1.4.0
 
 KIVY_METRICS_DENSITY
-    If set, the value will be used for :attr:`Metrics.density`.
+    如果设置这个环境变量，变量值会提供给 :attr:`Metrics.density` 属性使用。
 
     .. versionadded:: 1.5.0
 
 KIVY_METRICS_FONTSCALE
 
-    If set, the value will be used for :attr:`Metrics.fontscale`.
+    如果设置这个环境变量，变量值会提供给 :attr:`Metrics.fontscale` 属性使用。
 
     .. versionadded:: 1.5.0
 
-Graphics
+显卡的环境变量
 --------
 
 KIVY_GL_BACKEND
-    The OpenGL backend to use. See :mod:`~kivy.graphics.cgl`.
+    后端使用 OpenGL 显卡驱动。阅读 :mod:`~kivy.graphics.cgl` 文档。
 
 KIVY_GL_DEBUG
-    Whether to log OpenGL calls. See :mod:`~kivy.graphics.cgl`.
+    是否对 OpenGL 调用做日志记录。阅读 :mod:`~kivy.graphics.cgl` 文档。
 
 KIVY_GRAPHICS
-    Whether to use OpenGL ES2. See :mod:`~kivy.graphics.cgl`.
+    是否使用 OpenGL ES2 驱动。阅读 :mod:`~kivy.graphics.cgl` 文档。
 
 KIVY_GLES_LIMITS
-    Whether the GLES2 restrictions are enforced (the default, or if set to
-    1). If set to false, Kivy will not be truly GLES2 compatible.
+    是否限制强制使用 GLES2 驱动（默认开启，或设置成 1）。
+    如果设置成禁用的话， Kivy 无法实现兼容 GLES2 驱动。
 
-    Following is a list of the potential incompatibilities that result
-    when set to true.
+    如果设置成开启的话，如下是一份潜在不兼容的清单。
 
 ==============	====================================================
 Mesh indices	If true, the number of indices in a mesh is limited
@@ -203,8 +202,8 @@ Texture blit    When blitting to a texture, the data (color and
     .. versionadded:: 1.8.1
 
 KIVY_BCM_DISPMANX_ID
-    Change the default Raspberry Pi display to use. The list of available value
-    is accessible in `vc_dispmanx_types.h`. Default value is 0:
+    改变默认使用 Raspberry Pi 驱动的环境变量。可用的变量值是来自
+     `vc_dispmanx_types.h` 文件。默认值是 0：
 
     - 0: DISPMANX_ID_MAIN_LCD
     - 1: DISPMANX_ID_AUX_LCD
@@ -215,20 +214,19 @@ KIVY_BCM_DISPMANX_ID
     - 6: DISPMANX_ID_FORCE_OTHER
 
 KIVY_BCM_DISPMANX_LAYER
-    Change the default Raspberry Pi dispmanx layer. Default value is 0.
+    改变默认使用 Raspberry Pi dispmanx layer 驱动的环境变量。默认值是 0。
 
     .. versionadded:: 1.10.1
 
-Event Loop
+事件循环的环境变量
 ----------
 
 KIVY_EVENTLOOP
-    Which async library should be used when the app is run in an asynchronous
-    manner. See :mod:`kivy.app` for example usage.
+    当应用采用异步机制运行时，必须要用 async 标准库。
+    阅读 :mod:`kivy.app` 模块了解实例用法。
 
-    ``'asyncio'``: When the app is run in an asynchronous manner and the standard
-        library asyncio package should be used. The default if not set.
-    ``'trio'``: When the app is run in an asynchronous manner and the `trio`
-        package should be used.
+    ``'asyncio'``: 异步模式运行应用时要使用 Python 的 asyncio 异步标准库。
+        默认是不进行此环境变量的设置。
+    ``'trio'``: 异步模式运行应用时也要使用 `trio` 库。
 
     .. versionadded:: 2.0.0
