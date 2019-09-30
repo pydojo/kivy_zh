@@ -1,48 +1,48 @@
 .. _configure kivy:
 
-Configure Kivy
+配置 Kivy
 ==============
 
-The configuration file for kivy is named `config.ini`, and adheres
-to the `standard INI <http://en.wikipedia.org/wiki/INI_file>`_ format.
+对于 kivy 应用的配置文件来说，就是名叫 `config.ini` 的文件，
+这种配置文件的标准格式如下 `标准 INI 格式 <http://en.wikipedia.org/wiki/INI_file>`_ 
 
-Locating the configuration file
+配置文件的存放位置
 -------------------------------
 
-The location of the configuration file is controlled by the
-environment variable `KIVY_HOME`::
+配置文件所在位置是由环境变量 `KIVY_HOME` 来控制::
 
     <KIVY_HOME>/config.ini
 
-On desktop, this defaults to::
+桌面应用默认值是::
 
     <HOME_DIRECTORY>/.kivy/config.ini
 
-Therefore, if your user is named "tito", the file will be here:
+因此，如果你的操作系统用户名是 "tito" 的话，
+那么配置文件会在：
 
 - Windows: ``C:\Users\tito\.kivy\config.ini``
 - OS X: ``/Users/tito/.kivy/config.ini``
 - Linux: ``/home/tito/.kivy/config.ini``
 
-On Android, this defaults to::
+在安卓操作系统上，配置文件的默认位置是::
 
     <ANDROID_APP_PATH>/.kivy/config.ini
 
-If your app is named "org.kivy.launcher", the file will be here::
+如果你的 kivy 应用名字是 "org.kivy.launcher" 的话，
+配置文件的位置是::
 
     /data/data/org.kivy.launcher/files/.kivy/config.ini
 
-On iOS, this defaults to::
+在苹果 iOS 系统上，配置文件的默认位置是::
 
     <HOME_DIRECTORY>/Documents/.kivy/config.ini
 
 
-Local configuration
+本地配置文件
 -------------------
 
-Sometimes it's desired to change configuration only for certain applications
-or during testing of a separate part of Kivy for example input providers.
-To create a separate configuration file you can simply use these commands::
+有时候想要给某些应用只改变配置，或者在测试期间对 Kivy 的局部做测试，例如输入测试。
+那么要建立一个单独的配置文件，你可以直接在程序中使用如下这些命令来实现::
 
     from kivy.config import Config
 
@@ -50,15 +50,14 @@ To create a separate configuration file you can simply use these commands::
     # set config
     Config.write()
 
-When a local configuration of single ``.ini`` file isn't enough, e.g. when
-you want to have separate environment for `garden`, kivy logs and other things,
-you'll need to change the the ``KIVY_HOME`` environment variable in your
-application to get desired result::
+当只有一个本地配置文件 ``.ini`` 是不够的，例如，当你想要给 `garden` 提供一个
+单独环境来记录 kivy 日志和其它事物，你会需要改变 ``KIVY_HOME`` 环境变量，那
+就要在程序中来获得需要的结果::
 
     import os
     os.environ['KIVY_HOME'] = <folder>
 
-or before each run of the application change it manually in the console:
+或者在应用每次运行之前在终端里手动改变这个环境变量值：
 
 #. Windows::
 
@@ -68,11 +67,10 @@ or before each run of the application change it manually in the console:
 
     export KIVY_HOME=<folder>
 
-After the change of ``KIVY_HOME``, the folder will behave exactly the same
-as the default ``.kivy/`` folder mentioned above.
+改变 ``KIVY_HOME`` 环境变量值后，所指向的文件夹与上面提到过的
+默认 ``.kivy/`` 目录在行为上是一样的。
 
-Understanding config tokens
+理解配置令牌
 ---------------------------
 
-All the configuration tokens are explained in the :mod:`kivy.config`
-module.
+所有配置令牌都解释在 :mod:`kivy.config` 模块中。
