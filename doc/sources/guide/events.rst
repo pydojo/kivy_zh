@@ -1,141 +1,129 @@
 .. _events:
 .. _properties:
 
-Events and Properties
+事件与财产
 =====================
 
-Events are an important part of Kivy programming. That may not be surprising to
-those with GUI development experience, but it's an important concept for
-newcomers. Once you understand how events work and how to bind to them, you
-will see them everywhere in Kivy. They make it easy to build whatever behavior
-you want into Kivy.
+事件都是 Kivy 编程中的一项重要组成部分。对那些 GUI 开发老手来说没有什么理解困难，
+但对于新手来说是一个重要概念。一旦你理解了事件是如何工作的，以及理解如何绑定事件的话，
+你会在 Kivy 代码中看到事件都是无处不在的。不管你想要的行为是什么，在 Kivy 中建立
+事件并没有你想象的那么难，也没有你认为的那么容易。
 
-The following illustration shows how events are handled in the Kivy framework.
+下面的图片解释了事件都是如何在 Kivy 框架中进行处理的。
 
 .. image:: images/Events.*
 
 
-Introduction to the Event Dispatcher
+介绍事件调度器
 ------------------------------------
 
-One of the most important base classes of the framework is the
-:class:`~kivy.event.EventDispatcher` class. This class allows you to register
-event types, and to dispatch them to interested parties (usually other event
-dispatchers). The :class:`~kivy.uix.widget.Widget`,
-:class:`~kivy.animation.Animation` and :obj:`~kivy.clock.Clock` classes are
-examples of event dispatchers.
+这是框架中最重要的基础类之一，那就是 :class:`~kivy.event.EventDispatcher` 类。
+这个类允许你注册事件类型，然后调度给感兴趣的部分（常常是调度给其它事件调度器）。
+其中 :class:`~kivy.uix.widget.Widget` 类，
+:class:`~kivy.animation.Animation` 类和 :obj:`~kivy.clock.Clock` 对象都是
+事件调度器的示例。
 
-EventDispatcher objects depend on the main loop to generate and
-handle events.
+事件调度器根据主循环来产生和处理事件。
 
-Main loop
+主循环
 ---------
 
-As outlined in the illustration above, Kivy has a `main loop`. This loop is
-running during all of the application's lifetime and only quits when exiting
-the application.
+在上面的图示中，Kivy 有一个 `main loop` ，这种循环会一直运行在所有应用的生命周期中，
+并且只在退出程序时才会终止循环。
 
-Inside the loop, at every iteration, events are generated from user input,
-hardware sensors or a couple of other sources, and frames are rendered to the
-display.
+在主循环里，每一次迭代，都会从用户输入、硬件传感器、或其它源头生成事件，并且帧都被翻译
+给显示器。
 
-Your application will specify callbacks (more on this later), which are called
-by the main loop. If a callback takes too long or doesn't quit at all, the main
-loop is broken and your app doesn't work properly anymore.
+你的应用会描述一些回调（稍后再多说一点回调的事儿），这些回调都被主循环调用。如果一个回调
+花费的事件太长，或无法退出一次回调的话，主循环就断裂了，然后你的应用就无法正常工作了。
 
-In Kivy applications, you have to avoid long/infinite loops or sleeping.
-For example the following code does both::
+在 Kivy 应用里，你要想避免太长的循环等待或无限循环等待，甚至进入无响应。例如下面的示例
+代码会进入这种麻烦中::
 
     while True:
         animate_something()
         time.sleep(.10)
 
-When you run this, the program will never exit your loop, preventing Kivy from
-doing all of the other things that need doing. As a result, all you'll see is a
-black window which you won't be able to interact with. Instead, you need to
-"schedule" your ``animate_something()`` function to be called repeatedly.
+当你运行类似这样的一种代码时，程序永远不会退出循环，那么 Kivy 处了这个循环什么其它事也
+做不了了。由于这种结果，你会看到一个黑色的窗口，不会显示任何互动产生的变化。相反，你需要
+对重复调用的 ``animate_something()`` 函数做一份*时间安排*。
 
 
-Scheduling a repetitive event
+对重复的事件做时间安排
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-You can call a function or a method every X times per second using
-:meth:`~kivy.clock.Clock.schedule_interval`. Here is an example of calling a
-function named my_callback 30 times per second::
+你可以调用一个函数或方法，安排在每秒调用多少次，那就要使用
+:meth:`~kivy.clock.Clock.schedule_interval` 这个方法来实现。
+这里有一个例子，安排 `my_callback` 函数每条调用 30 次::
 
     def my_callback(dt):
-        print 'My callback is called', dt
+        print('My callback is called', dt)
     event = Clock.schedule_interval(my_callback, 1 / 30.)
 
-You have multiple ways of unscheduling a previously scheduled event. One, is
-to use :meth:`~kivy.clock.ClockEvent.cancel` or :meth:`~kivy.clock.Clock.unschedule`::
+要想取消一个时间计划完的事件，你有许多方法。其中一个就是使用
+ :meth:`~kivy.clock.ClockEvent.cancel` 方法或 :meth:`~kivy.clock.Clock.unschedule` 方法::
 
     event.cancel()
 
-or::
+或::
 
     Clock.unschedule(event)
 
-Alternatively, you can return False in your callback, and your event will be automatically
-unscheduled::
+另外，你可以在回调函数中返回 `False` 值，那么当返回这个值的时候会自动取消时间计划::
 
     count = 0
     def my_callback(dt):
         global count
         count += 1
         if count == 10:
-            print 'Last call of my callback, bye bye !'
+            print('Last call of my callback, bye bye !')
             return False
-        print 'My callback is called'
+        print('My callback is called')
     Clock.schedule_interval(my_callback, 1 / 30.)
 
 
-Scheduling a one-time event
+对一次性事件做时间计划
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Using :meth:`~kivy.clock.Clock.schedule_once`, you can call a function "later",
-like in the next frame, or in X seconds::
+使用 :meth:`~kivy.clock.Clock.schedule_once` 方法你可以实现下一个调用的函数是什么，
+就像下一帧要什么画面，或在 X 秒内调用::
 
     def my_callback(dt):
-        print 'My callback is called !'
+        print('My callback is called !')
     Clock.schedule_once(my_callback, 1)
 
-This will call ``my_callback`` in one second. The second argument is the amount
-of time to wait before calling the function, in seconds. However, you can
-achieve some other results with special values for the second argument:
+这个例子告诉我们 ``my_callback`` 函数在1秒内调用。其中第二个参数的意思是
+在调用函数前等待时间不能超过1秒。不管如何做到的，你可以用第二个参数值实现一个
+指定的时间计划：
 
-- If X is greater than 0, the callback will be called in X seconds
-- If X is 0, the callback will be called after the next frame
-- If X is -1, the callback will be called before the next frame
+- 如果 X 大于 0，回调会在 X 秒内被调用。即限时模式！
+- 如果 X 等于 0，回调会在下一帧完成后被调用。即后天模式！
+- 如果 X 等于 -1，回调函数会在下一帧之前被调用。即明天模式！
 
-The -1 is mostly used when you are already in a scheduled event, and if you
-want to schedule a call BEFORE the next frame is happening.
+第二个参数值最多使用的是 -1，因为你正位于当前帧，就是在下一个事件发生*之前*安排一件事。
 
-A second method for repeating a function call is to first schedule a callback once
-with :meth:`~kivy.clock.Clock.schedule_once`, and a second call to this function
-inside the callback itself::
+第二个方法对于重复调用一个函数来说，就是使用 :meth:`~kivy.clock.Clock.schedule_once`
+方法先计划一次回调函数，然后在回调函数自身中第二次调用这个函数::
 
 
     def my_callback(dt):
-        print 'My callback is called !'
+        print('My callback is called !')
         Clock.schedule_once(my_callback, 1)
     Clock.schedule_once(my_callback, 1)
 
-While the main loop will try to keep to the schedule as requested, there is some
-uncertainty as to when exactly a scheduled callback will be called. Sometimes
-another callback or some other task in the application will take longer than
-anticipated and thus the timing can be a little off.
+同时主循环会尝试把事件计划保留成已请求过的，当一个计划完的回调正好被调用时，
+会有一些不明情况发生。有时候应用中另一个回调，或某个其它任务所花费的时间要
+比已经参与的回调或任务更长，因此计时可以稍微短一点儿。
 
-In the latter solution to the repetitive callback problem, the next iteration will
-be called at least one second after the last iteration ends. With
-:meth:`~kivy.clock.Clock.schedule_interval` however, the callback is called
-every second.
+对于这种重复回调问题来说，解决方案是最新的迭代结束之后下一次迭代的调用至少是一秒。
+使用 :meth:`~kivy.clock.Clock.schedule_interval` 方法，不管如何做到的，
+回调都是按照每秒来被调用。
 
-Trigger events
+发动事件
 ~~~~~~~~~~~~~~
 
-Sometimes you may want to schedule a function to be called only once for the next 
-frame, preventing duplicate calls. You might be tempted to achieve that like so::
+有时候你也许想要为下一帧只对一个函数做一次性计划，这样可以防止重复调用。
+你可以像下面一样来实现::
 
     # First, schedule once.
     event = Clock.schedule_once(my_callback, 0)
@@ -145,37 +133,35 @@ frame, preventing duplicate calls. You might be tempted to achieve that like so:
     Clock.unschedule(event)
     event = Clock.schedule_once(my_callback, 0)
 
-This way of programming a trigger is expensive, since you'll always call
-unschedule, even if the event has already completed. In addition, a new event is
-created every time. Use a trigger instead::
+这种编程方法是发动事件的昂贵做法，因为你总要先调用取消计划，
+即使事件已经完成了，也要做一步没有意义的操作。另外，每次都会
+产生一个新事件。那么使用一个触发器来替换昂贵的做法::
 
     trigger = Clock.create_trigger(my_callback)
     # later
     trigger()
 
-Each time you call trigger(), it will schedule a single call of your callback. If
-it was already scheduled, it will not be rescheduled.
+每次你调用 `trigger()` 的时候，它会对你的 `my_callback` 函数做单次调用。
+如果已经计划过这个函数了，就不会重复做计划。
 
 
-Widget events
+挂件事件
 -------------
 
-A widget has 2 default types of events:
+一个挂件有 2 种默认事件类型：
 
-- Property event: if your widget changes its position or size, an event is fired.
-- Widget-defined event: e.g. an event will be fired for a Button when it's pressed or
-  released.
+- 财产事件： 如果你的挂件改变了自身的位置或尺寸，一个事件就被触发了。
+- 用挂件定义事件：: 例如一个会被按钮触发的事件，当按下或松开按钮时就会产生一种挂件事件。
 
-For a discussion on how widget touch events managed and propagated, please refer
-to the :ref:`Widget touch event bubbling <widget-event-bubbling>` section.
+对于挂件触碰事件是如何管理的讨论，以及挂件触碰事件是如何传播的讨论，
+请阅读 :ref:`挂件触碰事件冒泡 <widget-event-bubbling>` 参考文档。
 
-Creating custom events
+建立自定义事件
 ----------------------
 
-To create an event dispatcher with custom events, you need to register the name
-of the event in the class and then create a method of the same name.
+要建立一个事件调度器含有自定义的事件，你需要用类来注册事件的名字，然后建立一个同名方法。
 
-See the following example::
+自定义事件例子::
 
     class MyEventDispatcher(EventDispatcher):
         def __init__(self, **kwargs):
@@ -188,42 +174,40 @@ See the following example::
             self.dispatch('on_test', value)
 
         def on_test(self, *args):
-            print "I am dispatched", args
+            print("I am dispatched", args)
 
 
-Attaching callbacks
+把回调附着在事件上
 -------------------
 
-To use events, you have to bind callbacks to them. When the event is
-dispatched, your callbacks will be called with the parameters relevant to
-that specific event.
+要使用事件，你还要把回调函数绑定到事件上。当事件被调度时，
+你的回调函数才会使用事件的参数进行调用。
 
-A callback can be any python callable, but you need to ensure it accepts
-the arguments that the event emits. For this, it's usually safest to accept the
-`*args` argument, which will catch all arguments in the `args` list.
+一个回调函数可以是任何一种 Python 可调用对象，但你需要确保
+可调用对象能够接收多参数，这样事件发出的参数才可以被接收。
+对于这个来说，常常最安全的做法就是使用 `*args` 多参数形式，
+它会捕获所有位于 `args` 列表中的参数。
 
-Example::
+绑定事件的回调例子::
 
     def my_callback(value, *args):
-        print "Hello, I got an event!", args
+        print("Hello, I got an event!", args)
 
 
     ev = MyEventDispatcher()
     ev.bind(on_test=my_callback)
     ev.do_something('test')
 
-Pleases refer to the :meth:`kivy.event.EventDispatcher.bind` method
-documentation for more examples on how to attach callbacks.
+请阅读 :meth:`kivy.event.EventDispatcher.bind` 方法的文档了解
+更多如何把回调附着在事件上的示例。
 
-Introduction to Properties
+介绍财产
 --------------------------
 
-Properties are an awesome way to define events and bind to them. Essentially,
-they produce events such that when an attribute of your object changes,
-all properties that reference that attribute are automatically updated.
+财产都是定义事件和绑定事件回调的困难方法。虽然不可缺少，但财产生产的
+事件都是一个对象的属性有变化时发生的事情，所有财产指向的属性都会被自动更新。
 
-There are different kinds of properties to describe the type of data you want to
-handle.
+有各种不同类型的财产，都是用来描述你想要处理的数据类型。
 
 - :class:`~kivy.properties.StringProperty`
 - :class:`~kivy.properties.NumericProperty`
@@ -237,37 +221,35 @@ handle.
 - :class:`~kivy.properties.ReferenceListProperty`
 
 
-Declaration of a Property
+一项财产的声明
 -------------------------
 
-To declare properties, you must declare them at the class level. The class will then do
-the work to instantiate the real attributes when your object is created. These properties
-are not attributes: they are mechanisms for creating events based on your
-attributes::
+要声明财产，你必须声明在类的层次上。当你建立完对象时，
+类才会做实例化成属性的工作。这些财产都不是属性：它们都是根据属性来建立事件的机制::
 
     class MyWidget(Widget):
 
         text = StringProperty('')
 
 
-When overriding `__init__`, *always* accept `**kwargs` and use `super()` to call
-the parent's `__init__` method, passing in your class instance::
+当覆写 `__init__` 方法时，*一直* 要接收 `**kwargs` 多关键字参数，
+并且使用 `super()` 内置函数来让子类调用父类的 `__init__` 方法，
+总要使用明确地代入参数方式写在你的子类初始化方法中::
 
         def __init__(self, **kwargs):
             super(MyWidget, self).__init__(**kwargs)
 
 
-Dispatching a Property event
+调度一个财产事件
 ----------------------------
 
-Kivy properties, by default, provide an `on_<property_name>` event. This event is
-called when the value of the property is changed.
+Kivy 的财产，默认提供一个 `on_<property_name>` 事件。
+当财产值改变时，这个事件就会被调用。
 
-.. note::
-    If the new value for the property is equal to the current value, then the
-    `on_<property_name>` event will not be called.
+.. Note::
+    如果财产的新值等于当前值的话，`on_<property_name>` 事件不会被调用。
 
-For example, consider the following code:
+例如思考如下代码：
 
 .. code-block:: python
    :linenos:
@@ -283,17 +265,17 @@ For example, consider the following code:
             return super(CustomBtn, self).on_touch_down(touch)
 
         def on_pressed(self, instance, pos):
-            print ('pressed at {pos}'.format(pos=pos))
+            print('pressed at {pos}'.format(pos=pos))
 
-In the code above at line 3::
+上面第3行代码::
 
     pressed = ListProperty([0, 0])
 
-We define the `pressed` Property of type :class:`~kivy.properties.ListProperty`,
-giving it a default value of `[0, 0]`. From this point forward, the `on_pressed`
-event will be called whenever the value of this property is changed.
+是我们定义了 `pressed` 财产类型为 :class:`~kivy.properties.ListProperty` 类，
+并给出了默认值 `[0, 0]`。继续向下看，不管什么时候这个财产值改变了
+ `on_pressed` 事件都会被调用。
 
-At Line 5::
+在第5行开始::
 
     def on_touch_down(self, touch):
         if self.collide_point(*touch.pos):
@@ -301,39 +283,35 @@ At Line 5::
             return True
         return super(CustomBtn, self).on_touch_down(touch)
 
-We override the :meth:`on_touch_down` method of the Widget class. Here, we check
-for collision of the `touch` with our widget.
+我们覆写了 `Widget`类的 :meth:`on_touch_down` 方法。此处我们检查了
+触碰我们挂件时发生 `touch` 的状态。
 
-If the touch falls inside of our widget, we change the value of `pressed` to touch.pos
-and return True, indicating that we have consumed the touch and don't want it to
-propagate any further.
+如果触碰落在了我们挂件范围中，我们改变了 `pressed` 的值指向 `touch.pos` 后
+返回 `True` 值，这说明我们已经消化掉了触碰后并不想继续传播下去。
 
-Finally, if the touch falls outside our widget, we call the original event
-using `super(...)` and return the result. This allows the touch event propagation
-to continue as it would normally have occurred.
+最后，如果触碰落在挂件范围以外的话，我们使用 `super(...)` 部分代码来调用
+原来的事件后返回结果。这允许触碰事件继续传播，说明事件会正常地出现。
 
-Finally on line 11::
+最后从第11行代码看::
 
     def on_pressed(self, instance, pos):
-        print ('pressed at {pos}'.format(pos=pos))
+        print('pressed at {pos}'.format(pos=pos))
 
-We define an `on_pressed` function that will be called by the property whenever the
-property value is changed.
+我们定义了一个 `on_pressed` 方法，这个方法会在财产值变化时被调用。
 
 .. Note::
-    This `on_<prop_name>` event is called within the class where the property is
-    defined. To monitor/observe any change to a property outside of the class
-    where it's defined, you should bind to the property as shown below.
+    这里的 `on_<prop_name>` 类型事件被调用都是在类里定义财产的位置上发生。
+    要监视/观察任何一项定义在类范围以外的财产变化，你就要按照下面方法来绑定到财产了。
 
 
-**Binding to the property**
+**绑定到财产**
 
-How to monitor changes to a property when all you have access to is a widget
-instance? You *bind* to the property::
+如何监视所有从外部访问一项财产的变化？例如通过挂件实例来访问另一个类的财产。
+那你就要*绑定*到财产::
 
     your_widget_instance.bind(property_name=function_name)
 
-For example, consider the following code:
+根据上面的例子，思考如下代码：
 
 .. code-block:: python
    :linenos:
@@ -349,25 +327,25 @@ For example, consider the following code:
             self.add_widget(Button(text='btn 2'))
 
         def btn_pressed(self, instance, pos):
-            print ('pos: printed from root widget: {pos}'.format(pos=.pos))
+            print('pos: printed from root widget: {pos}'.format(pos=.pos))
 
-If you run the code as is, you will notice two print statements in the console.
-One from the `on_pressed` event that is called inside the `CustomBtn` class and
-another from the `btn_pressed` function that we bind to the property change.
+如果你运行这类代码，你会在终端里注意到执行了两个print函数。
+一个是来自 `on_pressed` 事件，这个事件是调用在 `CustomBtn` 类里，
+另一个是来自 `btn_pressed` 方法，这是我们绑定外部财产变化产生的。
 
-The reason that both functions are called is simple. Binding doesn't mean
-overriding. Having both of these functions is redundant and you should generally
-only use one of the methods of listening/reacting to property changes.
+这两个函数都直接被调用的原因是，绑定不代表覆写。
+这两个函数可以选择其一，通用中你应该只使用其中
+一种监听/响应方式来检测财产的变化。
 
-You should also take note of the parameters that are passed to the
-`on_<property_name>` event or the function bound to the property.
+你也应该注意得到的参数，这些参数都被代入到 `on_<property_name>` 事件中，
+或者代入绑定到财产的函数里。
 
 .. code-block:: python
 
     def btn_pressed(self, instance, pos):
 
-The first parameter is `self`, which is the instance of the class where this
-function is defined. You can use an in-line function as follows:
+第一参数必须是 `self`，这代表的就是定义这个函数的所在类的实例。
+你可以使用函数式面向对象方法来实现，例如：
 
 .. code-block:: python
    :linenos:
@@ -380,13 +358,12 @@ function is defined. You can use an in-line function as follows:
     cb.bind(pressed=_local_func)
     self.add_widget(cb)
 
-The first parameter would be the `instance` of the class the property is
-defined.
+第一参数会成为定义财产类的实例了。
 
-The second parameter would be the `value`, which is the new value of the property.
+第二个参数会是财产的新值 `value` 。
 
-Here is the complete example, derived from the snippets above, that you can
-use to copy and paste into an editor to experiment.
+下面是一个完整的示例，综合应用了上面的代码片段，
+你可以复制粘贴到你的文本编辑器中做一下实验。
 
 .. code-block:: python
    :linenos:
@@ -435,21 +412,21 @@ use to copy and paste into an editor to experiment.
         TestApp().run()
 
 
-Running the code above will give you the following output:
+运行上面示例代码会产生如下结果：
 
 .. image:: images/property_events_binding.png
 
-Our CustomBtn has no visual representation and thus appears black. You can
-touch/click on the black area to see the output on your console.
+这里我们的 CustomBtn 类没有可视化表现形式因此显示的是黑色屏幕。
+你可以在黑色区域测试触碰/点击，看看终端里会输出什么内容。
 
-Compound Properties
+复合财产
 -------------------
 
-When defining an :class:`~kivy.properties.AliasProperty`, you normally define
-a getter and a setter function yourself. Here, it falls on to you to define
-when the getter and the setter functions are called using the `bind` argument.
+当定义一个 :class:`~kivy.properties.AliasProperty` 类的时候，
+你要正常地自己定义一个 `getter` 和 `setter` 函数。这样，当使用 
+`bind` 参数时才会调用你定义的财产控制属性。
 
-Consider the following code.
+思考一下如下代码：
 
 .. code-block:: python
    :linenos:
@@ -465,9 +442,9 @@ Consider the following code.
     read-only.
     '''
 
-Here `cursor_pos` is a :class:`~kivy.properties.AliasProperty` which uses the
-`getter` `_get_cursor_pos` with the `setter` part set to None, implying this
-is a read only Property.
+其中 `cursor_pos` 是一个 :class:`~kivy.properties.AliasProperty` 类的实例对象，
+它使用了 `getter` `_get_cursor_pos` 和 `setter` 部分设置成 `None`，隐含地表达了
+这个对象是只读财产。
 
-The bind argument at the end defines that `on_cursor_pos` event is dispatched
-when any of the properties used in the `bind=` argument change.
+其中 `bind=` 参数定义了 `on_cursor_pos` 事件被调用的情况，就是当任何一项用在
+ `bind=` 参数值里的财产有变化的时候。
