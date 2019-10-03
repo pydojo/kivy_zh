@@ -1,31 +1,29 @@
 .. _graphics:
 
-Graphics
+显卡绘图
 ========
 
-Introduction to Canvas
+介绍画布
 ----------------------
 
-A Widgets graphical representation is rendered using a canvas, which you can see
-as both an unlimited drawing board or as a set of drawing instructions. There
-are numerous instructions you can apply (add) to your canvas, but there are two
-main variations:
+一个挂件的显卡表现形式就是翻译成一张画布，在渲染画布的时候你即可以看到
+一个最终的画板，也可以看到一套绘画指令集。有许多指令你可以使用（增加）
+到你的画布上，但主要是2个不同的模块：
 
-- :mod:`context instructions <kivy.graphics.context_instructions>`
-- :mod:`vertex instructions <kivy.graphics.vertex_instructions>`
+- :mod:`语境指令 <kivy.graphics.context_instructions>`
+- :mod:`顶部指令 <kivy.graphics.vertex_instructions>`
 
-Context instructions don't draw anything, but they change the results of the
-vertex instructions.
+语境指令不会做出绘画动作，但语境指令改变顶部指令的结果。
 
-Canvasses can contain two subsets of instructions. They are the
-:mod:`canvas.before <kivy.graphics.Canvas.before>` and the :mod:`canvas.after
-<kivy.graphics.Canvas.after>` instruction groups.  The instructions in these
-groups will be executed before and after the :mod:`~kivy.graphics.canvas` group
-respectively. This means that they will appear under (be executed before) and
-above (be executed after) them.
-Those groups are not created until the user accesses them.
+许多画布可以包含2个子指令集。它们是
+:mod:`canvas.before <kivy.graphics.Canvas.before>` 模块和
+:mod:`canvas.after <kivy.graphics.Canvas.after>` 模块的指令组。
+在这两个指令组中指令会分别有 :mod:`~kivy.graphics.canvas` 模块
+之前和之后执行的指令。意味着画布会出现在指令代码的下面（指令先执行后绘制）
+和指令代码的上面（先绘制后执行指令）。
+那些指令组不会被建立，要等待用户访问指令才可以。
 
-To add a canvas instruction to a widget, you use the canvas context:
+要把一个画布指令增加到一个挂件上，你使用画布语境即可：
 
 .. code-block:: python
 
@@ -41,21 +39,20 @@ To add a canvas instruction to a widget, you use the canvas context:
             with self.canvas.after:
                 # you can use this to add instructions rendered after
 
-Context instructions
+语境指令
 --------------------
 
-Context instructions manipulate the opengl context. You can rotate, translate,
-and scale your canvas. You can also attach a texture or change the drawing color. This one
-is the most commonly used, but others are really useful too::
+语境指令是对 OpenGL 语境进行操作。你可以旋转、翻译和标量你的画布。
+你也可以附着上一个结构或改变绘制颜色。这是最共性的用法，但其它也真的有用::
 
    with self.canvas.before:
        Color(1, 0, .4, mode='rgb')
 
-Drawing instructions
+绘画指令
 --------------------
 
-Drawing instructions range from very simple ones, like drawing a line or a
-polygon, to more complex ones, like meshes or bezier curves::
+绘画指令范围非常直接，就像画一条线或画一个多边形一样，
+太多层化的指令例如是网格化或者是弧形曲线::
 
     with self.canvas:
        # draw a line using the default color
@@ -65,13 +62,12 @@ polygon, to more complex ones, like meshes or bezier curves::
        Color(1, 0, 0, .5, mode='rgba')
        Rectangle(pos=self.pos, size=self.size)
 
-Manipulating instructions
+操作指令
 -------------------------
 
-Sometimes you want to update or remove the instructions you have added to a
-canvas. This can be done in various ways depending on your needs:
+有时候你想要更新或移除你已经增加到画布上的指令。实现的方法许多，要根据你的需求：
 
-You can keep a reference to your instructions and update them::
+你可以保留一个指向你的指令的参考对象后更新这些指令::
 
     class MyWidget(Widget):
         def __init__(self, **kwargs):
@@ -87,7 +83,7 @@ You can keep a reference to your instructions and update them::
             self.rect.size = self.size
 
 
-Or you can clean your canvas and start fresh::
+或者你可以清除你的画布后启动刷新::
 
     class MyWidget(Widget):
         def __init__(self, **kwargs):
@@ -103,5 +99,4 @@ Or you can clean your canvas and start fresh::
             with self.canvas:
                 self.rect = Rectangle(pos=self.pos, size=self.size)
 
-Note that updating the instructions is considered the best practice as it
-involves less overhead and avoids creating new instructions.
+注意更新指令是最好的实行，因为这种方式触发较少的负荷并且避免建立新的指令。
