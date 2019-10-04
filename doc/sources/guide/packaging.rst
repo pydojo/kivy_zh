@@ -1,6 +1,6 @@
 .. _packaging:
 
-Packaging your application
+打包你的应用
 ==========================
 
 .. toctree::
