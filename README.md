@@ -3,21 +3,20 @@ Kivy
 
 <img align="right" height="256" src="https://raw.githubusercontent.com/kivy/kivy/master/kivy/data/logo/kivy-icon-256.png"/>
 
-Innovative user interfaces made easy.
+创新用户接口才让容易变现实。
 
-Kivy is an open source, cross-platform [Python](https://www.python.org)
-framework for the development of applications that make use of innovative,
-multi-touch user interfaces.
-The aim is to allow for quick and easy interaction design and rapid prototyping
-whilst making your code reusable and deployable.
+Kivy 是一个开源项目，跨平台的 [Python](https://www.python.org)
+框架，对于应用开发来说是一种创新，包含多触点用户接口。
+我们的目标是让交互式设计和快速原型工程变得简单实用，
+同时让你所写的代码具有可复用性和可部署性。
 
-Kivy is written in Python and [Cython](http://cython.org/), based on OpenGL ES
-2, supports various input devices and has an extensive widget library. With the
-same codebase, you can target Windows, macOS, Linux, Android and iOS. All Kivy
-widgets are built with multitouch support.
+Kivy 使用 Python 和 [Cython](http://cython.org/) 写的，
+依据 OpenGL ES 2 基础之上，支持多种输入设备，并具有大量挂件库。
+使用相同的源代码收集机制，你可以针对 Windows, macOS, Linux, Android 和 iOS
+操作系统来进行开发和部署。所有 Kivy 的挂件都支持多触点功能。
 
-Kivy is MIT licensed, actively developed by a great community and is supported
-by many projects managed by the [Kivy Organization](https://kivy.org/#organization).
+Kivy 隶属 MIT 协议，由很棒的社区主动开发，
+多项目管理支持由 [Kivy 组织机构](https://kivy.org/#organization) 负责。
 
 [![Coverage Status](https://coveralls.io/repos/kivy/kivy/badge.svg?branch=master)](https://coveralls.io/r/kivy/kivy?branch=master)
 [![Build Status](https://travis-ci.org/kivy/kivy.svg?branch=master)](https://travis-ci.org/kivy/kivy)
@@ -26,100 +25,92 @@ by many projects managed by the [Kivy Organization](https://kivy.org/#organizati
 [![Backers on Open Collective](https://opencollective.com/kivy/backers/badge.svg)](#backers) 
 [![Sponsors on Open Collective](https://opencollective.com/kivy/sponsors/badge.svg)](#sponsors) 
 
-Installation, Documentation and Examples
+安装、文档和示例
 ----------------------------------------
 
-Extensive installation instructions as well as tutorials and general
-documentation, including an API reference, can be found at https://kivy.org/docs.
-A [PDF version](https://media.readthedocs.org/pdf/kivy/latest/kivy.pdf) is also available.
+提供了大量安装指令与教程，以及通用技术文档和 API 参考手册，
+这些信息都可以在 https://kivy.org/docs 网址上找到。
+一份 [PDF 版本](https://media.readthedocs.org/pdf/kivy/latest/kivy.pdf) 也供使用。
 
-Kivy ships with many examples which can be found in the `examples` folder.
+Kivy 移交了许多示例，对于教学来说很有帮助，在 `examples` 文件夹中就可以找到。
 
-Support
+支持
 -------
 
-If you need assistance, you can ask for help on our mailing list:
+如果需要帮助，你可以通过我们的邮件清单来寻求帮助：
 
-* User Group : https://groups.google.com/group/kivy-users
-* Email      : kivy-users@googlegroups.com
+* 用户组 : https://groups.google.com/group/kivy-users
+* 电子邮件      : kivy-users@googlegroups.com
 
-We also have a Discord channel:
+我们也提供了讨论频道：
 
-* Server     : https://chat.kivy.org
-* Channel    : #support
+* 服务器     : https://chat.kivy.org
+* 频道    : #support
 
-Contributing
+贡献
 ------------
 
-We love pull requests and discussing novel ideas. Check out our
-[contribution guide](https://kivy.org/docs/contribute.html) and
-feel free to improve Kivy.
+我们热爱拉取请求后用描述性思想来讨论。
+查看我们的
+[贡献指导](https://kivy.org/docs/contribute.html) 并
+随着灵感来提升 Kivy。
 
-The following mailing list and Discord channel are used exclusively for
-discussions about developing the Kivy framework and its sister projects:
+下面的邮件清单和讨论频道仅用来讨论开发 Kivy 框架和姊妹项目话题：
 
-* Dev Group : https://groups.google.com/group/kivy-dev
-* Email     : kivy-dev@googlegroups.com
+* 开发组 : https://groups.google.com/group/kivy-dev
+* 电子邮件     : kivy-dev@googlegroups.com
 
-Discord channel:
+讨论频道：
 
-* Server     : https://chat.kivy.org
-* Channel    : #dev
+* 服务器     : https://chat.kivy.org
+* 频道    : #dev
 
-Sister projects
+姊妹项目
 ---------------
 
-- [Buildozer](https://github.com/kivy/buildozer): generic Python packager
-  for Android and iOS.
-- [Plyer](https://github.com/kivy/plyer): platform-independent Python wrapper
-  for platform-dependent APIs.
-- [Pyjnius](https://github.com/kivy/pyjnius): dynamic access to the Java/Android
-  API from Python.
-- [Pyobjus](https://github.com/kivy/pyobjus): dynamic access to the
-  Objective-C/iOS API from Python.
-- [Python for Android](https://github.com/kivy/python-for-android): toolchain
-  for building and packaging Python applications for Android.
-- [Kivy iOS](https://github.com/kivy/kivy-ios): toolchain for building and
-  packaging Kivy applications for iOS.
-- [Audiostream](https://github.com/kivy/audiostream): library for direct access
-  to the microphone and speaker.
-- [Kivy Designer](https://github.com/kivy/kivy-designer): UI designer for Kivy.
-- [KivEnt](https://github.com/kivy/kivent): entity-based game engine for Kivy.
-- [Garden](https://github.com/kivy-garden): widgets and libraries created and
-  maintained by users.
-* [Oscpy](https://github.com/kivy/oscpy/): a fast and tested python2/3
-  implementation of OSC.
+- [Buildozer](https://github.com/kivy/buildozer): 安装和苹果移动系统的通用 Python 打包器。
+- [Plyer](https://github.com/kivy/plyer): 依赖平台 APIs 的独立平台 Python 打包器。
+- [Pyjnius](https://github.com/kivy/pyjnius): 用 Python 动态访问 Java/Android 的 API。
+- [Pyobjus](https://github.com/kivy/pyobjus): 用 Python 动态访问 Objective-C/iOS API。
+- [Python for Android](https://github.com/kivy/python-for-android): 针对安装系统
+  建立和打包 Python 应用的工具链。
+- [Kivy iOS](https://github.com/kivy/kivy-ios): 针对 iOS 苹果移动操作系统
+  建立和打包 Kivy 应用程序的工具链。
+- [Audiostream](https://github.com/kivy/audiostream): 直接访问耳机和话筒的库。
+- [Kivy Designer](https://github.com/kivy/kivy-designer): Kivy 的 UI 设计器。
+- [KivEnt](https://github.com/kivy/kivent): Kivy 的实体游戏引擎。
+- [Garden](https://github.com/kivy-garden): 用户建立和维护挂件和库的项目。
+* [Oscpy](https://github.com/kivy/oscpy/): 一种快速测试 python2/3 的 OSC 项目。
 
-Licenses
+协议
 --------
 
-- Kivy is released under the terms of the MIT License. Please refer to the
-  LICENSE file.
-- The provided fonts Roboto and Roboto Mono are licensed and
-  distributed under the terms of the
-  [Apache License, Version 2.0](https://www.apache.org/licenses/LICENSE-2.0).
-  The DejaVuSans (used for the virtual keyboard) license can be viewed
-  [here](https://github.com/dejavu-fonts/dejavu-fonts/blob/master/LICENSE).
-- The current UI design has been adapted from Moblintouch theme's SVGs
-  and is licensed under the terms of the
-  [LGPLv2.1](https://www.gnu.org/licenses/old-licenses/lgpl-2.1).
+- Kivy 发布在 MIT 协议条款之下。请参考 LICENSE 文件内容。
+- 字体 Roboto 和 Roboto Mono 的提供都在
+  [Apache License, Version 2.0](https://www.apache.org/licenses/LICENSE-2.0)
+  协议条款之下进行分发。
+  字体 DejaVuSans (用于虚拟键盘的字体) 协议可以在下面链接处看到
+  [协议内容](https://github.com/dejavu-fonts/dejavu-fonts/blob/master/LICENSE)。
+- 目前的 UI 设计已经满足了多触点主题 SVG 格式，并且在
+  [LGPLv2.1](https://www.gnu.org/licenses/old-licenses/lgpl-2.1)
+  协议条款之下。
 
-## Contributors
+## 贡献者
 
-This project exists thanks to all the people who contribute. [[Contribute](.github/CONTRIBUTING.md)].
+本项目的存在要感谢所有做出贡献的人们。 [[贡献者们](.github/CONTRIBUTING.md)]。
 <a href="https://github.com/kivy/kivy/graphs/contributors"><img src="https://opencollective.com/kivy/contributors.svg?width=890&button=false" /></a>
 
 
-## Backers
+## 赞助人
 
-Thank you to all our backers! 🙏 [[Become a backer](https://opencollective.com/kivy#backer)]
+感谢那些赞助者们！ 🙏 [[成为一名赞助者](https://opencollective.com/kivy#backer)]
 
 <a href="https://opencollective.com/kivy#backers" target="_blank"><img src="https://opencollective.com/kivy/backers.svg?width=890"></a>
 
 
-## Sponsors
+## 赞助商
 
-Support this project by becoming a sponsor. Your logo will show up here with a link to your website. [[Become a sponsor](https://opencollective.com/kivy#sponsor)]
+支持本项目的赞助商的品牌会显示在这里，每个商标都会链接到赞助商的主页。 [[成为一名赞助商](https://opencollective.com/kivy#sponsor)]
 
 <a href="https://opencollective.com/kivy/sponsor/0/website" target="_blank"><img src="https://opencollective.com/kivy/sponsor/0/avatar.svg"></a>
 <a href="https://opencollective.com/kivy/sponsor/1/website" target="_blank"><img src="https://opencollective.com/kivy/sponsor/1/avatar.svg"></a>
