@@ -1,53 +1,48 @@
-Introduction
+介绍
 ------------
 
 .. container:: title
 
-    Start Developing Kivy Apps Right Away!
+    正确地开启 Kivy 应用开发就在这里！
 
-Creating Kivy apps is fun and rewarding. This guide should be the perfect
-starting point to get you on the right track for app development. You will
-require a basic knowledge of Python to follow this introduction.
+建造 Kivy 应用是有趣且有收获的一件事。本指导有责任让你的起点变得完美，
+因为我们让你们走在正轨上去开发应用。你们需要掌握的Python基础知识都在本介绍中。
 
 .. image:: ../images/gs-introduction.png
     :align: center
     :height: 255px
 
-If you need more background on the Python language, you might be interested in
-these tutorials:
+如果你需要更多的Python背景知识，你可以学习如下教程：
 
 * `The Official Python Tutorial <http://docs.python.org/tutorial/>`_
 * `Learn Python in 10 minutes <https://www.stavros.io/tutorials/python/>`_
 * `Learn Python the hard way <http://learnpythonthehardway.org/>`_
 
-Using Kivy on your computer, you can create apps that run on:
+在电脑上使用 Kivy 你可以建立许多操作系统上的应用程序：
 
-- Desktop computers: OS X, Linux, Windows.
-- iOS devices: iPad, iPhone.
-- Android devices: tablets, phones.
-- Any other touch-enabled professional/homebrew devices supporting TUIO
-  (Tangible User Interface Objects).
+- 桌面电脑系统有： OS X、 Linux、 Windows。
+- 苹果移动iOS系统有： iPad、 iPhone。
+- 安卓移动系统有： 平板电脑、手机。
+- 其它任何一种支持 TUIO（可触摸用户界面物体）的可触摸专业设备/homebrew 设备。
 
-Kivy empowers you with the freedom to write your code once and have it run
-as-is on different platforms.
+Kivy 给予你们自由地书写你的代码，一旦完成运行后，可以发不到不同的操作系统平台上。
 
-Follow this guide to get the tools you need, understand the major concepts and
-learn best practices. As this is an introduction, pointers to more information
-will be provided at the end of each section.
+下面的指导内容是你要拥有的工具，理解主要概念和学习最实际的技术。
+由于这里是一次介绍，更多信息会提供在本文结束部分。
 
-As you proceed through the guide, you will, using Kivy:
+在你们继续旅程时，你们会使用 Kivy 来掌握如下内容：
 
-- **Learn**:    The basics of programming with the Kivy language.
-- **Explore**:  The Kivy framework.
-- **Create**:   A simple cross-platform app.
-- **Package**:  For your choice of platform.
+- **学习**：    使用 Kivy 设计语言的编程基础。
+- **探索**：  使用 Kivy 框架。
+- **建造**：   一种直接跨平台的应用。
+- **打包**：  针对一个平台来发布应用程序。
 
-Finally, you will learn how to **Deploy** on the device of your choice.
+最后，你们会学习如何在你选择的设备上 **部署** 应用程序。
 
-Each section of the guide introduces a new topic, trying to give you enough
-information to get started and links to related articles for more in-depth
-explanations. When you are done with this guide, you'll be able to develop Kivy
-apps and you will know where to look for information for the more challenging
-stuff your innovative applications will require.
+每个指导部分都涉及一个新话题，尽力供应你们足够的信息，
+让你们能够扬帆起航，并且提供一些相关文章的超链接以供阅读。
+这样你们也可以获得更深入的解释内容。
+当你们完成本次指导后，你们就具备了开发 Kivy 应用的能力，
+并且你们会知道去哪里找到更多的挑战，其中的信息都是帮助你获得创意内容。
 
-Enough introductions, let's get down to business.
+介绍已经足够了，我们开始动手吧！
