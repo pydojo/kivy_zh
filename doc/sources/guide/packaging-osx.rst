@@ -1,51 +1,51 @@
-Creating packages for OS X
+建立 OS X 打包程序
 ==========================
 
 .. note::
 
-    This guide describes multiple ways for packaging Kivy applications.
-    Packaging with PyInstaller is recommended for general use.
+    本指导描述了许多方法来为 OS X 操作系统打包 Kivy 程序。
+    使用 `PyInstaller` 打包是通用中建议使用的解决方案。
 
 .. _osx_pyinstaller:
 
-Using PyInstaller and Homebrew
+使用 PyInstaller 和 Homebrew
 ------------------------------
 .. note::
-    Package your app on the oldest OS X version you want to support.
+    在最老旧的 OS X 系统版本上打包你需要一些支持。
 
-Complete guide
+完整指导
 ~~~~~~~~~~~~~~
-#. Install `Homebrew <http://brew.sh>`_
-#. Install Python::
+#. 安装 `Homebrew <http://brew.sh>`_
+#. 安装 Python::
 
     $ brew install python
 
    .. note::
-     To use Python 3, ``brew install python3`` and replace ``pip`` with
-     ``pip3`` in the guide below.
+     要使用 Python 3 版本， ``brew install python3`` 后在下面的指导内容中
+     要用 ``pip3`` 来代替 ``pip`` 命令。
 
-#. (Re)install your dependencies with ``--build-bottle`` to make sure they can
-   be used on other machines::
+#. 使用 ``--build-bottle`` 来安装或重新安装你的依赖包，
+   确保依赖包可以用在其它机器上::
 
     $ brew reinstall --build-bottle sdl2 sdl2_image sdl2_ttf sdl2_mixer
 
    .. note::
-       If your project depends on GStreamer or other additional libraries
-       (re)install them with ``--build-bottle`` as described
-       `below <additional libraries_>`_.
+       如果你的项目根据 GStreamer 或其它额外的库，也要使用
+        ``--build-bottle`` 来安装或重新安装，与
+       `below <additional libraries_>`_ 描述的一样。
 
-#. Install Cython and Kivy:
+#. 安装 Cython 和 Kivy：
 
     .. parsed-literal::
 
         $ pip install |cython_install|
         $ pip install -U kivy
 
-#. Install PyInstaller::
+#. 安装 PyInstaller::
 
     $ pip install -U pyinstaller
 
-#. Package your app using the path to your main.py::
+#. 使用指向 ``main.py`` 的路径来打包你的应用::
 
     $ pyinstaller -y --clean --windowed --name touchtracer \
       --exclude-module _tkinter \
@@ -55,20 +55,19 @@ Complete guide
       /usr/local/share/kivy-examples/demo/touchtracer/main.py
 
    .. note::
-     This will not yet copy additional image or sound files. You would need to
-     adapt the created ``.spec`` file for that.
+     这不会复制额外的图片或音频文件。你需要在 ``.spec`` 描述文件中来实现。
 
 
-Editing the spec file
+编辑描述文件
 ~~~~~~~~~~~~~~~~~~~~~
-The specs file is named `touchtracer.spec` and is located in the directory
-where you ran the pyinstaller command.
+描述文件名叫做 `touchtracer.spec` 并且在执行 `pyinstaller` 命令时
+所写的目录中可以找到。
 
-You need to change the `COLLECT()` call to add the data of touchtracer
-(`touchtracer.kv`, `particle.png`, ...). Change the line to add a Tree()
-object. This Tree will search and add every file found in the touchtracer
-directory to your final package. Your COLLECT section should look something
-like this::
+你需要改变 `COLLECT()` 语句部分增加 touchtracer 的数据文件
+（`touchtracer.kv`, `particle.png`, 等等）。还要增加一个
+ `Tree()` 树结构对象。这个树结构对象会搜索并发现 `touchtracer`
+ 目录里的每个文件，增加到你的最终程序包里。你的 `COLLECT` 语句部分
+应该写成如下一样的代码::
 
 
     coll = COLLECT(exe, Tree('/usr/local/share/kivy-examples/demo/touchtracer/'),
@@ -79,59 +78,58 @@ like this::
                    upx=True,
                    name='touchtracer')
 
-This will add the required hooks so that PyInstaller gets the required Kivy
-files. We are done. Your spec is ready to be executed.
+这会增加所需要的钩子，所以 PyInstaller 能得到需要的 Kivy 文件。
+我们完成这部分工作后，你的描述文件就准备好了，下一步就是执行描述文件。
 
-Build the spec and create a DMG
+建立描述文件和创建一个 DMG 程序
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-#. Open a console.
-#. Go to the PyInstaller directory, and build the spec::
+#. 打开一个终端。
+#. 进入描述文件所在的目录，执行如下命令::
 
     $ pyinstaller -y --clean --windowed touchtracer.spec
 
-#. Run::
+#. 然后运行如下命令::
 
     $ pushd dist
     $ hdiutil create ./Touchtracer.dmg -srcfolder touchtracer.app -ov
     $ popd
 
-#. You will now have a Touchtracer.dmg available in the `dist` directory.
+#. 在 `dist` 目录中此时会有一个 `Touchtracer.dmg` 程序了。
 
 
-Additional Libraries
+额外的库
 ~~~~~~~~~~~~~~~~~~~~
 GStreamer
 ^^^^^^^^^
-If your project depends on GStreamer::
+如果你的项目有依赖库 GStreamer 的话，要重新执行如下命令::
 
     $ brew reinstall --build-bottle gstreamer gst-plugins-{base,good,bad,ugly}
 
 .. note::
-    If your Project needs Ogg Vorbis support be sure to add the
-    ``--with-libvorbis`` option to the command above.
+    如果你的项目需要 Ogg Vorbis 支持，就要确保在上面命令中增加
+    ``--with-libvorbis`` 可选项来执行。
 
-If you are using Python from Homebrew you will also need the following step
-until `this pull request <https://github.com/Homebrew/homebrew/pull/46097>`_
-gets merged::
+如果你使用的 Python 来自 Homebrew 的话，你也需要遵循如下步骤，直到
+ `this pull request <https://github.com/Homebrew/homebrew/pull/46097>`_
+获得了合并功能::
 
     $ brew reinstall --with-python --build-bottle https://github.com/cbenhagen/homebrew/raw/patch-3/Library/Formula/gst-python.rb
 
 
-Using PyInstaller without Homebrew
+使用 PyInstaller 不用 Homebrew
 ----------------------------------
-First install Kivy and its dependencies without using Homebrew as mentioned here
+第一次安装 Kivy 和其依赖包不使用 Homebrew 的提示内容在下面链接地址中。
 http://kivy.org/docs/installation/installation.html#development-version.
 
-Once you have kivy and its deps installed, you need to install PyInstaller.
+一旦你完成了 kivy 和其 deps 依赖包的安装，你需要安装 PyInstaller 打包库。
 
-Let's assume we use a folder like `testpackaging`::
+我们假设使用一个 `testpackaging` 文件夹::
 
     cd testpackaging
     git clone http://github.com/pyinstaller/pyinstaller
 
-Create a file named touchtracer.spec in this directory and add the following
-code to it::
+在这个目录里建立一个名叫 `touchtracer.spec` 的文件，然后在文件里写如下代码::
 
     # -*- mode: python -*-
 
@@ -170,7 +168,7 @@ code to it::
                  icon=None,
              bundle_identifier=None)
 
-Change the paths with your relevant paths::
+把路径部分改写成你要使用的路径::
 
     a = Analysis(['/path/to/yout/folder/containing/examples/demo/touchtracer/main.py'],
                 pathex=['/path/to/yout/folder/containing/testpackaging'],
@@ -178,7 +176,7 @@ Change the paths with your relevant paths::
     ...
     coll = COLLECT(exe, Tree('../kivy/examples/demo/touchtracer/'),
 
-Then run the following command::
+然后运行如下命令::
 
     pyinstaller/pyinstaller.py touchtracer.spec
 
