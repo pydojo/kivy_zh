@@ -1,25 +1,24 @@
 .. _packaging_ios:
 
-Create a package for IOS
+建立一个 IOS 包程序
 ========================
 
 .. note::
 
-    Currently, kivy-iOS builds packages with Python 2.7 and 3.7.
+    目前， kivy-iOS 使用 Python 2.7 和 3.7 来建立打包程序。
 
-The overall process for creating a package for IOS can be explained in 4 steps:
+整个过程对于 IOS 来说，建立一个打包程序要用4个步骤来做出解释：
 
-#. :ref:`Compile the distribution` (python + modules for IOS)
-#. :ref:`Create an Xcode project` (and link your source code)
-#. :ref:`Update the Xcode project`
-#. :ref:`Customize`
+#. :ref:`Compile the distribution` 编译分发包(python + modules for IOS)
+#. :ref:`Create an Xcode project` 建立一个Xcode项目(and link your source code)
+#. :ref:`Update the Xcode project` 更新Xcode项目
+#. :ref:`Customize` 自定义
 
-Prerequisites
+前置条件
 -------------
 
-You need to install some dependencies, like Cython, autotools, etc. We
-encourage you to use `Homebrew <http://mxcl.github.com/homebrew/>`_ to install
-those dependencies:
+你需要安装一些依赖包，就像安装 Cython, autotools, 等等依赖包一样。
+我们鼓励你使用 `Homebrew <http://mxcl.github.com/homebrew/>`_ 来安装如下依赖包：
 
 .. parsed-literal::
 
@@ -28,55 +27,54 @@ those dependencies:
     sudo easy_install pip
     sudo pip install |cython_install|
 
-For more detail, see :ref:`IOS Prerequisites <packaging_ios_prerequisites>`.
-Just ensure that everything is ok before starting the second step!
+对于更多细节，阅读 :ref:`IOS 前期准备 <packaging_ios_prerequisites>` 文档。
+这样确保在第二个步骤之前每件事都没问题！
 
 .. _Compile the distribution:
 
-Compile the distribution
+编译分发包
 ------------------------
 
-Open a terminal, and type::
+打开一个终端，然后输入如下命令::
 
     $ git clone git://github.com/kivy/kivy-ios
     $ cd kivy-ios
+    $ pip install -r requirements.txt
+    $ ./toolchain.py build python3
     $ ./toolchain.py build kivy
 
-Most of the python distribution is packed into `python27.zip`. If you
-experience any issues, please refer to our
-`user group <https://groups.google.com/forum/#!forum/kivy-users>`_ or the
-`kivy-ios project page <https://github.com/kivy/kivy-ios>`_.
+大部分 python 分发包都打包成 `python27.zip` 形式。如果你的体验中有任何一个问题，
+请访问我们的
+`用户组 <https://groups.google.com/forum/#!forum/kivy-users>`_ 或者访问
+`kivy-ios 项目页面 <https://github.com/kivy/kivy-ios>`_ 来沟通。
 
 .. _Create an Xcode project:
 
-Create an Xcode project
+建立一个 Xcode 项目
 -----------------------
 
-Before proceeding to the next step, ensure your application entry point is a file
-named `main.py`.
+继续执行下一步之前，确保你的应用入口是一个名叫 `main.py` 的文件。
 
-We provide a script that creates an initial Xcode project to start with. In the
-command line below, replace `test` with your project name. It must be a
-name without any spaces or illegal characters::
+我们提供了一个脚本来建立一个初始化的 Xcode 项目已做启动准备。在如下命令行中，
+用你自己的项目名字替换 `test` 部分。项目名字必须不能含有任何一个空格或非法字符::
 
     $ ./toolchain.py create <title> <app_directory>
     $ ./toolchain.py create Touchtracer ~/code/kivy/examples/demo/touchtracer
 
 .. Note::
-    You must use a fully qualified path to your application directory.
+    你必须使用一个完整路径指向你的应用程序目录。
 
-A directory named `<title>-ios` will be created, with an Xcode project in it.
-You can open the Xcode project::
+一个名叫 `<title>-ios` 的目录会被建立，其中含有一个 Xcode 项目。
+你可以打开 Xcode 项目::
 
     $ open touchtracer-ios/touchtracer.xcodeproj
 
-Then click on `Play`, and enjoy.
+然后点击 `Play` 就可以与 IOS 应用一起玩耍了。
 
 .. Note::
 
-    Everytime you press `Play`, your application directory will be synced to
-    the `<title>-ios/YourApp` directory. Don't make changes in the -ios
-    directory directly.
+    每次你按下 `Play` 的时候，你的应用目录都会同步到 `<title>-ios/YourApp` 目录。
+    不要直接在 -ios 目录中做任何变更。
 
 .. _Update the Xcode project:
 
