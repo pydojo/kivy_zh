@@ -1,49 +1,49 @@
-Kivy - Documentation
+Kivy - 文档
 ====================
 
-You can access the latest documentation on the web:
+你可以访问最新的文档内容，网址是：
 
 * http://kivy.org/docs
 
-Contributing
+贡献
 ------------
 
-If you intend on editing and contributing documentation, assure the kivy source
-code is up to date before proceeding. If your documentation is outdated, it
-could result in merge conflicts.
+如果你对编辑文档感兴趣，又想做出一些贡献，
+请确保 kivy 源代码更新成最新内容后再开始工作。
+如果你的文档过期了，可能会导致合并时出现冲突问题。
 
-Install Sphinx
+安装 Sphinx
 --------------
 
-- With pip:
+- 使用 pip 安装：
   
   ``pip install sphinx``
 
-- With apt-get:
+- 使用 apt-get 安装：
     
   ``apt-get install python-sphinx``
 
-- With MacPorts:
+- 使用 MacPorts 安装：
   
   ``port install py34-sphinx``
 
-- On Windows (or from inside your virtualenv):
+- 在 Windows 系统上 (或在虚拟环境下)：
 
-  Get pip (https://pypi.python.org/pypi/pip). You'll use it to install the dependencies.
+  先获得 pip 程序 (https://pypi.python.org/pypi/pip). 你需要使用这个来安装依赖库。
 
-  To install pip, run ``python setup.py install`` in the pip directory. Now run:
+  要想安装 pip 程序，在 pip 目录命令行中运行 ``python setup.py install`` 命令。然后运行：
     
   ``pip install sphinxcontrib-blockdiag sphinxcontrib-seqdiag``
   
   ``pip install sphinxcontrib-actdiag sphinxcontrib-nwdiag``
     
-  Or just use the provided *doc-requirements.txt*:
+  或者使用提供的 *doc-requirements.txt* 文件用 pip 来进行安装：
     
   ``pip install -r doc-requirements.txt``
   
-Building the documentation
+建立文档
 --------------------------
 
-Generate documentation using make: ``make html``.
+生成文档使用 make 命令： ``make html``
 
-Documentation will be accessible in ``build/html/``.
+生成的文档存放在 ``build/html/`` 目录里，可以直接访问。
