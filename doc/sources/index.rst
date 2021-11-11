@@ -1,51 +1,49 @@
 :orphan:
 
 
-Welcome to Kivy
+欢迎来到 Kivy
 ===============
 
-Welcome to Kivy's documentation. Kivy is an open source software library for the
-rapid development of applications equipped with novel user interfaces, such as
-multi-touch apps.
+这是 Kivy 的文档页面。 Kivy 是一个开源软件库，
+针对快速开发应用具备各种用户界面的程序，例如，多点触控应用。
 
-We recommend that you get started with :doc:`/gettingstarted/index`. Then head
-over to the :ref:`guide-index`. We also have :ref:`quickstart` if you are
-impatient.
+我们建议你从 :doc:`/gettingstarted/index` 这篇文档开始阅读。
+然后，再阅读 :ref:`guide-index` 文档内容。
+如果想快速了解，可以从 :ref:`quickstart` 文档开始阅读。
 
-You are probably wondering why you should be interested in using Kivy. There is
-a document outlining our :ref:`philosophy` that we encourage you to read, and a
-detailed :ref:`architecture`.
+也许你想知道自己为什么要使用 Kivy 框架呢？这里有一篇纲要
+ :ref:`philosophy` 列出了我们的理想，值得你去看一下，
+而且还有一篇比较详细的 :ref:`architecture` 文档你也可以阅读以下。
 
-If you want to contribute to Kivy, make sure to read :ref:`contributing`. If
-your concern isn't addressed in the documentation, feel free to :ref:`contact`.
+如果你想成为一名 Kivy 贡献者的话，一定要阅读 :ref:`contributing` 这篇文档。
+如果你担心文档内容解释不清楚，可以通过 :ref:`contact` 随时联系我们。
 
 .. include:: contents.rst.inc
 
-Appendix
+附录
 ========
 
-The appendix contains licensing information and an enumeration of all the
-different modules, classes, functions and variables available in Kivy.
+附录内容中包含了协议信息，以及所有 Kivy 中可以使用的模块、类、函数和变量参考。
 
-License
+协议
 -------
 
-Kivy is released and distributed under the terms of the MIT license starting
-version 1.7.2. Older versions are still under the LGPLv3.
+Kivy 的发布和分发都是建立在 MIT 协议上的，从 1.7.2 版本开始就是这样了。
+而比较老的版本会采用 LGPLv3 协议。
 
-You should have received a copy of the MIT license alongside your Kivy
-distribution. See the LICENSE file in the Kivy root folder. An online version
-of the license can be found at:
+所以在分发你的 Kivy 程序时，一定要含有一份 MIT 协议内容的副本。
+查看 Kivy 根目录中的 LICENSE 文件内容。
+另外在线的协议版本可以在如下网址上找到：
 
     https://github.com/kivy/kivy/blob/master/LICENSE
 
-In a nutshell, the license allows you to use Kivy in your own projects
-regardless of whether they are open source, closed source, commercial or free.
-Even if the license doesn't require it, we would really appreciate when you
-make changes to the Kivy sourcecode **itself**, share those changes with us!
+简言之，协议保证了你把 Kivy 用在自己的项目中，不管你的项目是开源项目、比源项目、
+商业项目、还是免费项目，都是合法的。
+尽管协议中没有规定，如果你对 Kivy 源代码本身做出任何变更的话，
+如果把这些变更分享给我们，我们感激不尽！
 
-For a list of authors, please see the file AUTHORS that accompanies the
-Kivy source code distribution (next to LICENSE).
+对于作者清单，可以阅读 AUTHORS 文件内容，
+也在 Kivy 源代码分发内容中 (与 LICENSE 文件在同一个目录里) 。
 
 
-Kivy -- Copyright 2010-2018, The Kivy Authors.
+Kivy -- 版权 2010-2018, 由 Kivy 众多作者享有。
