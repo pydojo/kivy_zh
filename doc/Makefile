@@ -1,9 +1,9 @@
-# Makefile for Sphinx documentation
+# Makefile 是 Sphinx 文档自动化需要使用的文件
 #
 
 ENDUSER_BUILD	= yes
 
-# You can set these variables from the command line.
+# 你可以在命令行里设置这些变量。
 PYTHON		= python
 SPHINXOPTS	= -Q
 SPHINXOPTS_TEST	= -W -T
@@ -12,8 +12,8 @@ PAPER		=
 
 fasthtml: SPHINXOPTS += -j4
 
-# platform independent path separator
-# only system calls need to use $(P), b/c on win system calls have issues with /
+# 操作系统独立使用的路径分隔符
+# 只有需要使用 $(P) 的操作系统才可以调用， win 操作系统的 b/c 结构使用 / 分隔符会有问题
 ifdef ComSpec
 	PATHSEP2=\\
 	MKDIR=mkdir
@@ -23,7 +23,7 @@ else
 endif
 P=$(strip $(PATHSEP2))
 
-# Internal variables.
+# 内部变量
 PAPEROPT_a4		= -D latex_paper_size=a4
 PAPEROPT_letter		= -D latex_paper_size=letter
 ALLSPHINXOPTS		= -d build/doctrees $(PAPEROPT_$(PAPER)) $(SPHINXOPTS) sources
@@ -39,7 +39,7 @@ else
 	_TESTS = _TEST
 endif
 
-# Created in autobuild.py
+# 建立在 autobuild.py 程序中
 AUTOBUILD_STAMP = "autobuild.py-done"
 
 .PHONY: help clean html web pickle htmlhelp latex changes linkcheck gettext
@@ -66,7 +66,7 @@ clean:
 	-rm -rf sources/examples/gen__*.rst
 	-rm -rf sources/examples/gallery.rst
 	-rm -rf sources/examples/index.rst
-# windows just doesn't support e.g. build\*
+# windows 操作系统不支持的功能，例如， build\*
 ifdef ComSpec
 	-rmdir /s /q build
 else
@@ -154,5 +154,5 @@ linkcheck:
 
 build-all: html pickle htmlhelp pdf ps gettext
 
-# TODO: Make test run in non-enduser-build mode 
+# TODO: 在非终端用户建立模式中跑一下测试
 test: build-all
