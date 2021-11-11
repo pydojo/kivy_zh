@@ -1,9 +1,9 @@
-''' Create rst documentation of the examples directory.
+''' 建立 examples 目录中的 rst 文档。
 
-This uses screenshots in the screenshots_dir
-(currently doc/sources/images/examples) along with source code and files
-in the examples/ directory to create rst files in the generation_dir
-(doc/sources/examples) gallery.rst, index.rst, and gen__*.rst
+这会使用源代码中 screenshots_dir 目录里的截图
+(目前路径是 doc/sources/images/examples) 而且
+在 examples/ 目录中的文件都会建立成 rst 文件存放在 generation_dir 目录里
+(doc/sources/examples) 例如，gallery.rst, index.rst, 和 gen__*.rst
 
 '''
 
@@ -11,12 +11,12 @@ in the examples/ directory to create rst files in the generation_dir
 import os
 import re
 from os.path import sep
-from os.path import join as slash  # just like that name better
+from os.path import join as slash  # 命名成斜杠的意思更好一点
 from os.path import dirname, abspath
 from kivy.logger import Logger
 import textwrap
 
-# from here to the kivy top
+# 从当前路径移步到 kivy 所在位置
 base_dir = dirname(dirname(abspath(__file__)))
 examples_dir = slash(base_dir, 'examples')
 screenshots_dir = slash(base_dir, 'doc/sources/images/examples')
@@ -26,25 +26,25 @@ image_dir = "../images/examples/"  # relative to generation_dir
 gallery_filename = slash(generation_dir, 'gallery.rst')
 
 
-# Info is a dict built up from
-# straight filename information, more from reading the docstring,
-# and more from parsing the description text.  Errors are often
-# shown by setting the key 'error' with the value being the error message.
+# Info 信息是一个字典，直接从文件名信息中建立到，
+# 更多信息从读取文档字符串中建立，
+# 以及更多信息从语义分析描述文字中建立。常常显示到错误消息都是
+# 通过设置字典键 'error' 对应到值作为错误消息内容。
 #
-# It doesn't quite meet the requirements for a class, but is a vocabulary
-# word in this module.
+# 对于一个类来说不是非常符合需求，
+# 但在这个模块里就是一个词汇。
 
 def iter_filename_info(dir_name):
     """
-    Yield info (dict) of each matching screenshot found walking the
-    directory dir_name.  A matching screenshot uses double underscores to
-    separate fields, i.e. path__to__filename__py.png as the screenshot for
-    examples/path/to/filename.py.
+    产生每个匹配截图的信息 (字典) ，通过遍历目录
+     dir_name 找到的截图。一张匹配的截图使用2个下划线
+    来分隔区域，例如， path__to__filename__py.png 就是
+    examples/path/to/filename.py 的一张截图。
 
-    Files not ending with .png are ignored, others are either parsed or
-    yield an error.
+    没有用 .png 结尾的文件名都会被忽略，其它类型的图片格式经过语义分析后
+    抛出一个错误。
 
-    Info fields 'dunder', 'dir', 'file', 'ext', 'source' if not 'error'
+    如果没有 'error' 错误的话，信息区域是 'dunder', 'dir', 'file', 'ext', 'source'
     """
     pattern = re.compile(r'^((.+)__(.+)__([^-]+))\.png')
     for t in os.walk(dir_name):
@@ -65,13 +65,11 @@ def iter_filename_info(dir_name):
 
 
 def parse_docstring_info(text):
-    ''' parse docstring from text (normal string with '\n's) and return an info
-    dict.  A docstring should the first triple quoted string, have a title
-    followed by a line of equal signs, and then a description at
-    least one sentence long.
+    ''' 对文档字符串内容进行语义分析 (正常的字符串中含有 '\n' 换行符) 后返回一个信息字典。
+    一个文档字符串应该用三引号对儿来建立，要有一个标题，后面跟着一个换行符，然后至少要有一句话。
 
-    fields are 'docstring', 'title', and 'first_sentence' if not 'error'
-    'first_sentence' is a single line without newlines.
+    如果没有 'error' 的话，信息区域有 'docstring', 'title', 和 'first_sentence'
+    'first_sentence' 是没有换行符的单行内容。
     '''
     q = '\"\"\"|\'\'\''
     p = r'({})\s+([^\n]+)\s+\=+\s+(.*?)(\1)'.format(q)
@@ -86,9 +84,8 @@ def parse_docstring_info(text):
 
 
 def iter_docstring_info(dir_name):
-    ''' Iterate over screenshots in directory, yield info from the file
-     name and initial parse of the docstring.  Errors are logged, but
-     files with errors are skipped.
+    ''' 迭代目录中的截图，从文件名生成信息，并且初始化文档字符串语义分析。
+     错误都会被记录下来，但会跳过含有错误的文件。
     '''
     for file_info in iter_filename_info(dir_name):
         if 'error' in file_info:
@@ -112,20 +109,19 @@ def iter_docstring_info(dir_name):
 
 
 def enhance_info_description(info, line_length=79):
-    ''' Using the info['description'], add fields to info.
+    ''' 使用 info['description'] 字典键值操作，增加信息区域。
 
-    info['files'] is the source filename and any filenames referenced by the
-    magic words in the description, e.g. 'the file xxx.py' or
-    'The image this.png'.  These are as written in the description, do
-    not allow ../dir notation, and are relative to the source directory.
+    info['files'] 就是源文件和描述中所指的任何一个文件名，例如，
+     'the file xxx.py' 或 'The image this.png' 。
+    与描述中所写的内容一样，不允许使用 ../dir 符号，
+    以及源文件目录的相对路径。
 
-    info['enhanced_description'] is the description, as an array of
-    paragraphs where each paragraph is an array of lines wrapped to width
-    line_length.  This enhanced description include the rst links to
-    the files of info['files'].
+    info['enhanced_description'] 是描述成段落组成的阵列，
+    其中每段都是有许多行组成的，并按照 line_length 行宽度打包内容。
+    这种增强的描述信息包含了 info['files'] 中文件的 rst 链接。
     '''
 
-    # make text a set of long lines, one per paragraph.
+    # 建立许多行形成的文集，每段内容是一个文集。
     paragraphs = info['description'].split('\n\n')
     lines = [
         paragraph.replace('\n', '$newline$')
@@ -139,17 +135,17 @@ def enhance_info_description(info, line_length=79):
         if name not in info['files']:
             info['files'].append(name)
 
-    # add links where the files are referenced
+    # 增加参考文件链接
     folder = '_'.join(info['source'].split(sep)[:-1]) + '_'
     text = re.sub(r'([tT]he (?:file|image) )([\w\/]+\.\w+)',
                   r'\1:ref:`\2 <$folder$\2>`', text)
     text = text.replace('$folder$', folder)
 
-    # now break up text into array of paragraphs, each an array of lines.
+    # 此时把文本分解成由段落组成的阵列，每个阵列是有许多行组成的。
     lines = [line.replace('$newline$', '\n') for line in text.split('\n')]
     paragraphs = [
         textwrap.wrap(line, line_length)
-        # ignore wrapping if .. note:: or similar block
+        # 如果 rst 文件中有 .. note:: 这样类似的块内容就不做打包处理
         if not line.startswith(' ') else [line]
         for line in lines
     ]
@@ -157,9 +153,10 @@ def enhance_info_description(info, line_length=79):
 
 
 def get_infos(dir_name):
-    ''' return infos, an array info dicts for each matching screenshot in the
-    dir, sorted by source file name, and adding the field 'num' as he unique
-    order in this array of dicts'.
+    ''' 返回许多信息内容，
+    目录中每张匹配的截图都是一个阵列信息字典，
+    按照源文件名进行排序，而且在这个阵列字典中增加 'num' 数据区域
+    作为唯一的序号。
 
     '''
     infos = [i for i in iter_docstring_info(dir_name)]
@@ -171,16 +168,16 @@ def get_infos(dir_name):
 
 
 def make_gallery_page(infos):
-    ''' return string of the rst (Restructured Text) of the gallery page,
-    showing information on all screenshots found.
+    ''' 返回画廊页面的 rst (Restructured Text) 文件字符串内容，
+    显示所有找到的截图信息。
     '''
 
     def a(s=''):
-        ''' append formatted s to output, which will be joined into lines '''
+        ''' 对 s 格式化后加入到输出结果中，会以追加方式增加内容 '''
         output.append(s.format(**info))
 
     def t(left='', right=''):
-        ''' append left and right format strings into a table line. '''
+        ''' 把左边格式化字符串和右边格式化字符串追加到一张表的行上 '''
         l = left.format(**info)
         r = right.format(**info)
         if len(l) > width1 or len(r) > width2:
@@ -191,30 +188,29 @@ def make_gallery_page(infos):
                       .format(l, r, w1=width1, w2=width2))
 
     gallery_top = '''
-Gallery
+画廊
 -------
 
 .. _Tutorials:  ../tutorials-index.html
 
 .. container:: title
 
-    This gallery lets you explore the many examples included with Kivy.
-    Click on any screenshot to see the code.
+    这个画廊是让你查看使用 Kivy 的许多示例用的。
+    点击任何一张截图来查看代码。
 
-This gallery contains:
+本画廊含有:
 
-    * Examples from the examples/ directory that show specific capabilities of
-      different libraries and features of Kivy.
-    * Demonstrations from the examples/demos/ directory that explore many of
-      Kivy's abilities.
+    * 来自 examples/ 目录的示例，都是展示不同库所拥有的具体能力
+      以及展示 Kivy 的那些特性用的。
+    * 示范 examples/demos/ 目录中的内容，可以看到许多 Kivy 的能力。
 
-There are more Kivy programs elsewhere:
+在其它地方还有更多的 Kivy 程序:
 
-    * Tutorials_ walks through the development of complete Kivy applications.
-    * Unit tests found in the source code under the subdirectory kivy/tests/
-      can also be useful.
+    * Tutorials_ 教程会带你走遍完整的 Kivy 应用程序开发过程。
+    * 在源代码中找到的单元测试位于 kivy/tests/ 子目录中，
+      这也是对你有用的。
 
-We hope your journey into learning Kivy is exciting and fun!
+我们希望你的学习 Kivy 旅程是激动且有趣的一件事！
 
 '''
     output = [gallery_top]
@@ -227,8 +223,8 @@ We hope your journey into learning Kivy is exciting and fun!
           "\n    :target: gen__{dunder}.html")
         a("\n.. |title{num}|  replace:: **{title}**")
 
-    # write the table
-    width1, width2 = 20, 50  # not including two end spaces
+    # 写表格
+    width1, width2 = 20, 50  # 不包含2个结束位空格
     head = '+-' + '-' * width1 + '-+-' + '-' * width2 + '-+'
     a()
     a(head)
@@ -240,17 +236,17 @@ We hope your journey into learning Kivy is exciting and fun!
         for p in paragraphs:
             for line in textwrap.wrap(p, width2):
                 t('', line)
-            t()  # line between paragraphs
+            t()  # 段落之间的空行
         t()
         a(head)
     return "\n".join(output) + "\n"
 
 
 def make_detail_page(info):
-    ''' return str of the rst text for the detail page of the file in info. '''
+    ''' 返回信息中文件详细页面的 rst 文本字符串。 '''
 
     def a(s=''):
-        ''' append formatted s to output, which will be joined into lines '''
+        ''' 以追加方式把格式化过的 s 内容增加到输出结果里 '''
         output.append(s.format(**info))
 
     output = []
@@ -266,13 +262,13 @@ def make_detail_page(info):
             a(line)
         a()
 
-    # include images
+    # 包括图片
     last_lang = '.py'
     for fname in info['files']:
         full_name = slash(info['dir'], fname)
         ext = re.search(r'\.\w+$', fname).group(0)
         a('\n.. _`' + full_name.replace(sep, '_') + '`:')
-        # double separator if building on windows (sphinx skips backslash)
+        # 如果在 Windows 操作系统上建立的话 (sphinx 跳过反斜杠) ，使用2个分隔符
         if '\\' in full_name:
             full_name = full_name.replace(sep, sep*2)
 
@@ -290,7 +286,7 @@ def make_detail_page(info):
                 a('\n.. highlight:: ' + ext[1:])
                 a('    :linenothreshold: 3')
                 last_lang = ext
-            # prevent highlight errors with 'none'
+            # 防止使用 'none' 时出现高亮错误
             elif ext == '.txt':
                 a('\n.. highlight:: none')
                 a('    :linenothreshold: 3')
@@ -301,15 +297,15 @@ def make_detail_page(info):
 
 
 def write_file(name, s):
-    ''' write the string to the filename '''
+    ''' 把字符串写到文件里 '''
     with open(name, 'w') as f:
         f.write(s)
 
 
 def make_index(infos):
-    ''' return string of the rst for the gallery's index.rst file. '''
+    ''' 返回画廊 index.rst 文件的 rst 字符串内容。 '''
     start_string = '''
-Gallery of Examples
+画廊示例
 ===================
 
 .. toctree::
@@ -323,9 +319,7 @@ Gallery of Examples
 
 
 def write_all_rst_pages():
-    ''' Do the main task of writing the gallery,
-    detail, and index rst pages.
-    '''
+    ''' 负责写画廊，细节和索引 rst 页面这项主要任务。 '''
     infos = get_infos(screenshots_dir)
     s = make_gallery_page(infos)
     write_file(gallery_filename, s)
