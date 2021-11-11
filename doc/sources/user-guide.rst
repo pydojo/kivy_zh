@@ -1,8 +1,8 @@
-Kivy Project
+Kivy 项目
 ------------
 
-This part of the documentation explains the basic ideas behind Kivy's design
-and why you'd want to use it.
+本部分是解释 Kivy 设计背后基本思想的一篇文档，
+以及你为什么要使用 Kivy 这个框架。
 
 .. toctree::
     :maxdepth: 2

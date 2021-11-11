@@ -1,90 +1,78 @@
 .. _philosophy:
 
-Philosophy
+理念
 ==========
 
-In case you are wondering what Kivy is all about and what sets it apart from
-other solutions, this document is for you.
+当你想到 Kivy 是什么？与其它解决方案区分点是什么？那么本篇文档最适合你来阅读了。
 
 
-Why bother?
+还有烦恼吗？
 -----------
 
-Why would you want to use Kivy? After all, there are many great toolkits
-(or frameworks, or platforms) available out there -- for free. You have Qt and
-Flash, to name just two good choices for application development. Many of
-these numerous solutions already support Multi-Touch, so what is it that makes
-Kivy special and worth using?
+为什么你要使用 Kivy ？总体来说，有许多非常棒的工具集
+(或框架，或平台) 可以找得到，而且也都是免费的。也许你有了 Qt 和
+Flash ，作为程序开发来说都是2个良好的选择。许多类似这些解决方案
+都已经支持了多点触摸功能，那么是什么让 Kivy 特别值得去使用呢？
 
 
-Fresh
+新鲜感
 ~~~~~
-Kivy is made for today and tomorrow. Novel input methods such as Multi-Touch
-have become increasingly important. We created Kivy from scratch, specifically
-for this kind of interaction. That means we were able to rethink many things in
-terms of human computer interaction, whereas older (not to mean 'outdated',
-rather 'well-established') toolkits carry their legacy, which is often a burden.
-We're not trying to force this new approach to using a computer into the corset
-of existing models (say single-pointer mouse interaction).
-We want to let it flourish and let you explore the possibilities.
-*This* is what really sets Kivy apart.
+Kivy 是为了今天和明天而建立的。意想不到的输入方式有许多，例如，多点触控
+已经变得越来越重要。我们建立 Kivy 都是从草稿开始，特别是这种触控互动。
+这就意味着，我们可以重新思考人机互动中的许多事情，不管是年龄老的
+ (不代表过时，而是建立的良好的) 工具集已经变成了遗产，常常是一种负担。
+我们不打算强制把这种新方式带入到现有模式的计算机用法（鼠标操作模式）里去。
+我们想要让这种新方法开花结果后由你来探索各种可能性。
+*这就是* Kivy 与众不同之处。
 
 
-Fast
+快速
 ~~~~
 
-Kivy is fast. This applies to both *application development* and *application
-execution* speeds. We have optimized Kivy in many ways. We implement
-time-critical functionality on the *C level* to leverage the power of existing
-compilers. More importantly, we also use *intelligent algorithms* to minimize
-costly operations. We also use the *GPU* wherever it makes sense in our
-context. The computational power of today's graphics cards surpasses that of
-today's CPUs by far for some tasks and algorithms, especially drawing.  That's
-why we try to let the GPU do as much of the work as possible, thus increasing
-performance considerably.
+Kivy 是快的，这不仅体现在 *应用程序开发* 上，也体现在 *应用运行速度* 上。
+我们用了许多方法来优化 Kivy 框架。我们部署了严谨的时间功能，在 *C 语言* 上
+平衡已有的各种编译器威力。更重要的是，我们也使用了许多 *智能算法* 来最小化运算成本。
+我们也使用 *GPU* 功能在你的环境中也会带来有价值的效果。如今显卡的计算力在某些任务上
+已经甩了处理器几条街，在某些算法上也有这种效果，特别是在绘图上。
+这也就是为什么我们尝试让 GPU 来尽可能地多做运算和操作，因此提升性能是可观的。
 
 
-Flexible
+灵活
 ~~~~~~~~
 
-Kivy is flexible. This means it can be run on *a variety of different devices*,
-including Android powered smartphones and tablets. We support *all major
-operating systems* (Windows, Linux, OS X). Being flexible also means that Kivy's
-fast-paced development allows it to *adapt to new technologies quickly*.
-More than once have we added support for new external devices and software
-protocols, sometimes even before they were released. Lastly, Kivy is also
-flexible in that it is possible to use it in combination with a great number of
-different third-party solutions. For example, on Windows we support WM_TOUCH,
-which means that any device that has Windows 7 Pen & Touch drivers will *just
-work* with Kivy. On OS X you can use Apple's Multi-Touch capable devices, such
-as trackpads and mice. On Linux, you can use HID kernel input events.
-In addition to that, we support TUIO (Tangible User Interface Objects) and a
-number of other input sources.
+Kivy 的灵活性意味着可以运行在 *不同的设备* 上，包括安卓手机和平板电脑。
+我们支持 *所有主流操作系统* (Windows, Linux, OS X)。灵活性也是说 Kivy 的迅速开发
+让其 *快速适应许多新技术* 。我们不止一次为新的外部设备和软件添加协议支持，
+有时候甚至在它们发布之前就已经做好了。最后， Kivy 的灵活性也体现在可以与大量第三方
+解决方案组合起来使用。例如，在 Windows 系统上，我们支持 WM_TOUCH 功能，该功能
+是任何安装了 Windows 7 触控笔和触屏驱动的设备都可以与 Kivy 一起工作。
+在 OS X 操作系统上你可以使用苹果的多点触控设备，例如，触控板和触摸鼠标。
+在 Linux 操作系统上，你可以使用 HID 内核输入事件。
+另外，我们还支持 TUIO (触摸用户界面对象) 和一定数量的其它输入源。
 
 
-Focused
+专注力
 ~~~~~~~
 
-Kivy is focused. You can write a simple application with a few lines of code.
-Kivy programs are created using the *Python* programming language, which is
-incredibly versatile and powerful, yet easy to use. In addition, we created our
-own description language, the *Kivy Language*, for creating sophisticated user
-interfaces. This language allows you to set up, connect and arrange your
-application elements quickly. We feel that allowing you to focus on the
-essence of your application is more important than forcing you to fiddle with
-compiler settings. We took that burden off your shoulders.
+Kivy 的专注力在于，你可以用几行代码就可以写出一个简单的程序。
+Kivy 程序都是使用 *Python* 语言建立的，这让 Kivy 变得超乎想象的
+多才多艺和具有威力，却容易使用。另外，我们建立了自己的描述型语言，
+ *Kivy 语言* ，这是用来建立老练的用户界面用的。
+这种描述型语言让你可以快速配置、连接和安排你的程序里的各种元素。
+我们会让你专注在程序本身上，这更重要，而不是强迫你处理配置编译器那种繁琐的事情。
+我们帮你卸下编译的重担，更轻松地面对程序的书写。
 
 
-Funded
+资金
 ~~~~~~
 
-Kivy is actively developed by professionals in their field. Kivy is a
-community-influenced, professionally developed and commercially backed
-solution. Some of our core developers develop Kivy for a living.
-Kivy is here to stay. It's not a small, vanishing student project.
+Kivy 是活跃地开发者参与其中，他们都是各自领域的专家。
+Kivy 是一种社区驱动的项目，职业开发者们的加入和商业孵化解决方案提供资金动力。
+一些核心开发者一直从事 Kivy 的开发工作，所以 Kivy 一直坚持了下来。
+Kivy 不是那种小型的研究项目，会随着时间而消失殆尽。
 
 
-Free
+免费
 ~~~~
-Kivy is free to use. You don't have to pay for it. You don't even have to pay
-for it if you're making money out of selling an application that uses Kivy.
+Kivy 的使用完全免费。你不用担心为使用 Kivy 而花费一分钱。
+甚至你用 Kivy 为自己带来收入后也不需要为 Kivy 支付任何使用费。
