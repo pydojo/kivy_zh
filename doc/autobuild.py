@@ -1,8 +1,8 @@
 '''
-Script to generate Kivy API from source code.
+从源代码生成 Kivy API 用的脚本。
 
-Code is messy, but working.
-Be careful if you change anything in !
+代码有点乱，但有效。
+如果你要改变任何代码就要小心了！
 
 '''
 
@@ -24,7 +24,7 @@ from glob import glob
 
 import kivy
 
-# force loading of kivy modules
+# 强制加载 kivy 一些模块
 import kivy.app
 import kivy.metrics
 import kivy.atlas
@@ -69,21 +69,21 @@ import kivy.garden
 from kivy.factory import Factory
 from kivy.lib import ddsfile, mtdev
 
-# check for silenced build
+# 检查静默建立
 BE_QUIET = True
 if os.environ.get('BE_QUIET') == 'False':
     BE_QUIET = False
 
-# force loading of all classes from factory
+# 强制加载来自工厂的所有类
 for x in list(Factory.classes.keys())[:]:
     getattr(Factory, x)
 
-# Directory of doc
+# 目录 doc
 base_dir = os.path.dirname(__file__)
 dest_dir = os.path.join(base_dir, 'sources')
 examples_framework_dir = os.path.join(base_dir, '..', 'examples', 'framework')
 
-# Check touch file
+# 检查建立的空文件
 base = 'autobuild.py-done'
 with open(os.path.join(base_dir, base), 'w') as f:
     f.write('')
@@ -91,7 +91,7 @@ with open(os.path.join(base_dir, base), 'w') as f:
 
 def writefile(filename, data):
     global dest_dir
-    # avoid to rewrite the file if the content didn't change
+    # 如果内容没有变化不会重写文件
     f = os.path.join(dest_dir, filename)
     if not BE_QUIET:
         print('write', filename)
@@ -104,20 +104,20 @@ def writefile(filename, data):
     h.close()
 
 
-# Activate Kivy modules
+# 激活 Kivy 模块
 '''
 for k in kivy.kivy_modules.list().keys():
     kivy.kivy_modules.import_module(k)
 '''
 
 
-# Search all kivy module
+# 搜索所有 kivy 模块
 l = [(x, sys.modules[x],
       os.path.basename(sys.modules[x].__file__).rsplit('.', 1)[0])
       for x in sys.modules if x.startswith('kivy') and sys.modules[x]]
 
 
-# Extract packages from modules
+# 从模块中提取包
 packages = []
 modules = {}
 api_modules = []
@@ -136,12 +136,12 @@ for name, module, filename in l:
 
 packages.sort()
 
-# Create index
-api_index = '''API Reference
+# 建立索引
+api_index = '''API 参考手册
 -------------
 
-The API reference is a lexicographic list of all the different classes,
-methods and features that Kivy offers.
+本 API 参考手册是以文字形式列出所有不同的类，
+方法和 Kivy 提供的特性。
 
 .. toctree::
     :maxdepth: 1
@@ -154,10 +154,10 @@ for package in api_modules:
 writefile('api-index.rst', api_index)
 
 
-# Create index for all packages
-# Note on displaying inherited members;
-#     Adding the directive ':inherited-members:' to automodule achieves this
-#     but is not always desired. Please see
+# 建立所有包的索引
+# 注意显示继承成员关系；
+#     增加 ':inherited-members:' 指令到自动模块来实现这个功能
+#     但不总是希望这样做。请参阅
 #         https://github.com/kivy/kivy/pull/3870
 
 template = '\n'.join((
@@ -179,7 +179,7 @@ $EXAMPLES
 
 template_examples = '''.. _example-reference%d:
 
-Examples
+示例
 --------
 
 %s
@@ -191,17 +191,17 @@ template_examples_ref = ('# :ref:`Jump directly to Examples'
 
 def extract_summary_line(doc):
     """
-    :param doc: the __doc__ field of a module
-    :return: a doc string suitable for a header or empty string
+    :param doc: 一个模块的 __doc__ 数据区域
+    :return: 为只有一个标题或空字符串情况返回一个文档字符串
     """
     if doc is None:
         return ''
     for line in doc.split('\n'):
         line = line.strip()
-        # don't take empty line
+        # 不要空行
         if len(line) < 1:
             continue
-        # ref mark
+        # ref mark 参考标记
         if line.startswith('.. _'):
             continue
         return line
@@ -215,14 +215,14 @@ for package in packages:
     t = t.replace('$EXAMPLES_REF', '')
     t = t.replace('$EXAMPLES', '')
 
-    # search packages
+    # 搜索包
     for subpackage in packages:
         packagemodule = subpackage.rsplit('.', 1)[0]
         if packagemodule != package or len(subpackage.split('.')) <= 2:
             continue
         t += "    api-%s.rst\n" % subpackage
 
-    # search modules
+    # 搜索模块
     m = list(modules.keys())
     m.sort(key=lambda x: extract_summary_line(sys.modules[x].__doc__).upper())
     for module in m:
@@ -234,7 +234,7 @@ for package in packages:
     writefile('api-%s.rst' % package, t)
 
 
-# Create index for all module
+# 为所有模块建立索引
 m = list(modules.keys())
 m.sort()
 refid = 0
@@ -243,25 +243,25 @@ for module in m:
     if summary is None or summary == '':
         summary = 'NO DOCUMENTATION (module %s)' % package
 
-    # search examples
+    # 搜索示例
     example_output = []
     example_prefix = module
     if module.startswith('kivy.'):
         example_prefix = module[5:]
     example_prefix = example_prefix.replace('.', '_')
 
-    # try to found any example in framework directory
+    # 尝试在框架目录中找到任何一个示例
     list_examples = glob('%s*.py' % os.path.join(
         examples_framework_dir, example_prefix))
     for x in list_examples:
-        # extract filename without directory
+        # 提取不含目录到文件名
         xb = os.path.basename(x)
 
-        # add a section !
+        # 增加一个区域
         example_output.append('File :download:`%s <%s>` ::' % (
             xb, os.path.join('..', x)))
 
-        # put the file in
+        # 把文件放进区域中
         with open(x, 'r') as fd:
             d = fd.read().strip()
             d = '\t' + '\n\t'.join(d.split('\n'))
@@ -281,5 +281,5 @@ for module in m:
     writefile('api-%s.rst' % module, t)
 
 
-# Generation finished
+# 自动生成结束
 print('Auto-generation finished')
