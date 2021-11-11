@@ -83,3 +83,19 @@ venv
 kivy/setupconfig.py
 
 kivy/core/clipboard/_clipboard_sdl2.c
+examples/demo/touchtracer/generate-iconset.py
+examples/demo/touchtracer/icon.icns
+examples/demo/touchtracer/icon.iconset/icon_1024x1024.png
+examples/demo/touchtracer/icon.iconset/icon_128x128.png
+examples/demo/touchtracer/icon.iconset/icon_128x128@2x.png
+examples/demo/touchtracer/icon.iconset/icon_16x16.png
+examples/demo/touchtracer/icon.iconset/icon_16x16@2x.png
+examples/demo/touchtracer/icon.iconset/icon_256x256.png
+examples/demo/touchtracer/icon.iconset/icon_32x32.png
+examples/demo/touchtracer/icon.iconset/icon_256x256@2x.png
+examples/demo/touchtracer/icon.iconset/icon_32x32@2x.png
+examples/demo/touchtracer/icon.iconset/icon_512x512.png
+examples/demo/touchtracer/icon.iconset/icon_512x512@2x.png
+examples/demo/touchtracer/icon.iconset/icon_64x64.png
+examples/demo/touchtracer/icon.iconset/icon_64x64@2x.png
+examples/demo/touchtracer/icon.iconset/icon_8x8@2x.png

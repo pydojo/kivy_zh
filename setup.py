@@ -1,5 +1,5 @@
 #
-# Kivy - Cross-platform UI framework
+# Kivy - 跨平台 UI 框架
 # https://kivy.org/
 #
 
@@ -37,7 +37,7 @@ def ver_equal(self, other):
     return self.version == other
 
 
-# fix error with py3's LooseVersion comparisons
+# 用 python3 的 LooseVersion 比较操作来修复错误
 LooseVersion.__eq__ = ver_equal
 
 
@@ -113,18 +113,18 @@ def pkgconfig(*packages, **kw):
 
 
 # -----------------------------------------------------------------------------
-# Determine on which platform we are
+# 确定我们要使用哪个操作系统
 
 platform = sys.platform
 
-# Detect 32/64bit for OSX (http://stackoverflow.com/a/1405971/798575)
+# 检测 32/64bit OSX 苹果操作系统 (http://stackoverflow.com/a/1405971/798575)
 if sys.platform == 'darwin':
     if sys.maxsize > 2 ** 32:
         osx_arch = 'x86_64'
     else:
         osx_arch = 'i386'
 
-# Detect Python for android project (http://github.com/kivy/python-for-android)
+# 检测 Python 用于安卓项目 (http://github.com/kivy/python-for-android)
 ndkplatform = environ.get('NDKPLATFORM')
 if ndkplatform is not None and environ.get('LIBLINK'):
     platform = 'android'
@@ -149,7 +149,7 @@ if environ.get('KIVY_CROSS_PLATFORM'):
     platform = environ.get('KIVY_CROSS_PLATFORM')
 
 # -----------------------------------------------------------------------------
-# Detect options
+# 检测一些选项
 #
 c_options = OrderedDict()
 c_options['use_rpi'] = platform == 'rpi'
@@ -168,7 +168,7 @@ c_options['use_avfoundation'] = platform in ['darwin', 'ios']
 c_options['use_osx_frameworks'] = platform == 'darwin'
 c_options['debug_gl'] = False
 
-# now check if environ is changing the default values
+# 现在检查环境是否正在变成默认值
 for key in list(c_options.keys()):
     ukey = key.upper()
     if ukey in environ:
@@ -181,29 +181,29 @@ use_embed_signature = use_embed_signature or bool(
     platform not in ('ios', 'android'))
 
 # -----------------------------------------------------------------------------
-# We want to be able to install kivy as a wheel without a dependency
-# on cython, but we also want to use cython where possible as a setup
-# time dependency through `setup_requires` if building from source.
+# 我们要把 kivy 安装成一种轮子形式，这样就不需要依赖 cpython 了，
+# 但我们使用 cython 语言，也会尽可能把cython用作一种安装时的依赖，
+# 如果从源文件来建立的话，通过 `setup_requires` 进行配置。
 
-# There are issues with using cython at all on some platforms;
-# exclude them from using or declaring cython.
+# 在某些操作系统上使用 cython 会有一些问题；
+# 使用或声明 cython 时排除这些问题。
 
-# This determines whether Cython specific functionality may be used.
+# 这是用来确定是否使用 Cython 具体功能的。
 can_use_cython = True
-# This sets whether or not Cython gets added to setup_requires.
+# 这个变量设置是否把 Cython 加入到配置需求中的。
 declare_cython = False
 
 if platform in ('ios', 'android'):
-    # NEVER use or declare cython on these platforms
+    # 在这些操作系统上永远不使用或声明 cython 语言。
     print('Not using cython on %s' % platform)
     can_use_cython = False
 else:
     declare_cython = True
 
 # -----------------------------------------------------------------------------
-# Setup classes
+# 配置类
 
-# the build path where kivy is being compiled
+# 建立编译 kivy 的路径
 src_path = build_path = dirname(__file__)
 print("Current directory is: {}".format(os.getcwd()))
 print("Source and initial build directory is: {}".format(src_path))
@@ -212,18 +212,17 @@ print("Source and initial build directory is: {}".format(src_path))
 class KivyBuildExt(build_ext, object):
 
     def __new__(cls, *a, **kw):
-        # Note how this class is declared as a subclass of distutils
-        # build_ext as the Cython version may not be available in the
-        # environment it is initially started in. However, if Cython
-        # can be used, setuptools will bring Cython into the environment
-        # thus its version of build_ext will become available.
-        # The reason why this is done as a __new__ rather than through a
-        # factory function is because there are distutils functions that check
-        # the values provided by cmdclass with issublcass, and so it would
-        # result in an exception.
-        # The following essentially supply a dynamically generated subclass
-        # that mix in the cython version of build_ext so that the
-        # functionality provided will also be executed.
+        # 注意：这个类是如何声明成一个 distutils 标准库中
+        # build_ext 子类的，因为 Cython 语言版本在环境中初始化时可能无法使用。
+        # 然而，如果可以使用 Cython 语言的话，
+        # setuptools 会把 Cython 带到环境里，
+        # 因此， build_ext 自身版本就变成可用的了。
+        # 这就是为什么要用 __new__ 来实现，而不是用一种工厂函数，
+        # 因为有许多 distutils 的函数会使用 issubclass 来检查
+        # 由 cmdclass 提供的值，所以能产生一个例外错误效果。
+        # 下面这些是不可缺少的代码，提供动态生成子类，
+        # 混合了 build_ext 的 cython 语言版本，
+        # 所以能够执行所提供的功能。
         if can_use_cython:
             from Cython.Distutils import build_ext as cython_build_ext
             build_ext_cls = type(
@@ -242,12 +241,12 @@ class KivyBuildExt(build_ext, object):
         return retval
 
     def build_extensions(self):
-        # build files
+        # 建立一些文件
         config_h_fn = ('include', 'config.h')
         config_pxi_fn = ('include', 'config.pxi')
         config_py_fn = ('setupconfig.py', )
 
-        # generate headers
+        # 生成一些头部文件
         config_h = '// Autogenerated file for Kivy C configuration\n'
         config_h += '#define __PY3 1\n'
         config_pxi = '# Autogenerated file for Kivy Cython configuration\n'
@@ -259,7 +258,7 @@ class KivyBuildExt(build_ext, object):
         config_py += 'CYTHON_BAD = {0}\n'.format(repr(', '.join(map(
             str, CYTHON_UNSUPPORTED))))
 
-        # generate content
+        # 生成内容
         print('Build configuration is:')
         for opt, value in c_options.items():
             value = int(bool(value))
@@ -308,8 +307,8 @@ class KivyBuildExt(build_ext, object):
 
 
 def _check_and_fix_sdl2_mixer(f_path):
-    # Between SDL_mixer 2.0.1 and 2.0.4, the included frameworks changed
-    # smpeg2 have been replaced with mpg123, but there is no need to fix.
+    # 在 SDL_mixer 2.0.1 与 2.0.4 版本之间，包含了框架的变化，
+    # 用 mpg123 代替 smpeg2 ，但不需要固化这个变更。
     smpeg2_path = ("{}/Versions/A/Frameworks/smpeg2.framework"
                    "/Versions/A/smpeg2").format(f_path)
     if not exists(smpeg2_path):
@@ -343,12 +342,12 @@ def _check_and_fix_sdl2_mixer(f_path):
 
 # -----------------------------------------------------------------------------
 print("Python path is:\n{}\n".format('\n'.join(sys.path)))
-# extract version (simulate doc generation, kivy will be not imported)
+# 提取版本信息 (模拟 doc 生成， kivy 不会被导入)
 environ['KIVY_DOC_INCLUDE'] = '1'
 import kivy
 
-# Cython check
-# on python-for-android and kivy-ios, cython usage is external
+# Cython 语言检查
+# 在 python-for-android 和 kivy-ios 项目上， cython 语言是一种外部用法
 from kivy.tools.packaging.cython_cfg import get_cython_versions, get_cython_msg
 CYTHON_REQUIRES_STRING, MIN_CYTHON_STRING, MAX_CYTHON_STRING, \
     CYTHON_UNSUPPORTED = get_cython_versions()
@@ -370,17 +369,17 @@ if can_use_cython:
         print(cython_max_msg)
     sleep(1)
 
-# extra build commands go in the cmdclass dict {'command-name': CommandClass}
-# see tools.packaging.{platform}.build.py for custom build commands for
-# portable packages. Also e.g. we use build_ext command from cython if its
-# installed for c extensions.
+# 额外建立一些命令放在 cmdclass 字典里 {'command-name': CommandClass}
+# 阅读 tools.packaging.{platform}.build.py 模块了解为移植包自定义建立命令细节。
+# 例如，如果已经为 c 语言扩展而安装了 cython 语言的话，
+# 我们使用 cython 中的 build_ext 命令。
 from kivy.tools.packaging.factory import FactoryBuild
 cmdclass = {
     'build_factory': FactoryBuild,
     'build_ext': KivyBuildExt}
 
 try:
-    # add build rules for portable packages to cmdclass
+    # 为移植包到 cmdclass 增加一些建立规则
     if platform == 'win32':
         from kivy.tools.packaging.win32.build import WindowsPortableBuild
         cmdclass['build_portable'] = WindowsPortableBuild
@@ -390,7 +389,7 @@ try:
 except ImportError:
     print('User distribution detected, avoid portable command.')
 
-# Detect which opengl version headers to use
+# 检测使用那种 opengl 版本头部文件
 if platform in ('android', 'darwin', 'ios', 'rpi', 'mali', 'vc'):
     c_options['use_opengl_es2'] = True
 elif c_options['use_opengl_es2'] is None:
@@ -400,7 +399,7 @@ elif c_options['use_opengl_es2'] is None:
 print('Using this graphics system: {}'.format(
     ['OpenGL', 'OpenGL ES 2'][int(c_options['use_opengl_es2'] or False)]))
 
-# check if we are in a kivy-ios build
+# 检查我们是否使用一种 kivy-ios 建立方式
 if platform == 'ios':
     print('Kivy-IOS project environment detect, use it.')
     print('Kivy-IOS project located at {0}'.format(kivy_ios_root))
@@ -419,13 +418,13 @@ elif platform == 'darwin':
             environ["ARCHFLAGS"] = environ.get("ARCHFLAGS", "-arch x86_64")
             print("OSX ARCHFLAGS are: {}".format(environ["ARCHFLAGS"]))
 
-# detect gstreamer, only on desktop
-# works if we forced the options or in autodetection
+# 检查 gstreamer ，如果我们强制使用一些选项，
+# 或采用自动检测时，只在台式机上有效。
 if platform not in ('ios', 'android') and (c_options['use_gstreamer']
                                            in (None, True)):
     gstreamer_valid = False
     if c_options['use_osx_frameworks'] and platform == 'darwin':
-        # check the existence of frameworks
+        # 检查框架是否存在
         f_path = '/Library/Frameworks/GStreamer.framework'
         if not exists(f_path):
             c_options['use_gstreamer'] = False
@@ -457,22 +456,22 @@ if platform not in ('ios', 'android') and (c_options['use_gstreamer']
                 'libraries': ['gstreamer-1.0', 'glib-2.0', 'gobject-2.0']}
 
     if not gstreamer_valid:
-        # use pkg-config approach instead
+        # 使用包配置方法
         gst_flags = pkgconfig('gstreamer-1.0')
         if 'libraries' in gst_flags:
             print('GStreamer found via pkg-config')
             c_options['use_gstreamer'] = True
 
 
-# detect SDL2, only on desktop and iOS, or android if explicitly enabled
-# works if we forced the options or in autodetection
+# 检测 SDL2 ，如果我们强制使用一些选项，或采用自动检测，
+# 只在台式机和 iOS 系统上有小，或者如果明确启用的话，在安卓系统上也有效。
 sdl2_flags = {}
 if c_options['use_sdl2'] or (
         platform not in ('android',) and c_options['use_sdl2'] is None):
 
     sdl2_valid = False
     if c_options['use_osx_frameworks'] and platform == 'darwin':
-        # check the existence of frameworks
+        # 检查框架是否存在
         sdl2_valid = True
         sdl2_flags = {
             'extra_link_args': [
@@ -504,7 +503,7 @@ if c_options['use_sdl2'] or (
             print('Activate SDL2 compilation')
 
     if not sdl2_valid and platform != "ios":
-        # use pkg-config approach instead
+        # 使用包配置方法
         sdl2_flags = pkgconfig('sdl2', 'SDL2_ttf', 'SDL2_image', 'SDL2_mixer')
         if 'libraries' in sdl2_flags:
             print('SDL2 found via pkg-config')
@@ -512,7 +511,7 @@ if c_options['use_sdl2'] or (
 
 
 # -----------------------------------------------------------------------------
-# declare flags
+# 声明一些旗语
 
 
 def get_modulename_from_file(filename):
@@ -581,7 +580,7 @@ def determine_base_flags():
     elif platform == 'darwin':
         v = os.uname()
         if v[2] >= '13.0.0':
-            # use xcode-select to search on the right Xcode path
+            # 使用 xcode-select 命令行工具来搜索正确的 Xcode 路径，
             # XXX use the best SDK available instead of a specific one
             import platform as _platform
             xcode_dev = getoutput('xcode-select -p').splitlines()[0]
@@ -684,8 +683,8 @@ def determine_sdl2():
     if sdl2_flags and not sdl2_path and platform == 'darwin':
         return sdl2_flags
 
-    # no pkgconfig info, or we want to use a specific sdl2 path, so perform
-    # manual configuration
+    # 没有包配置信息，或者我们要使用一个具体的 sdl2 路径，
+    # 所以要执行手动配置。
     flags['libraries'] = ['SDL2', 'SDL2_ttf', 'SDL2_image', 'SDL2_mixer']
     split_chr = ';' if platform == 'win32' else ':'
     sdl2_paths = sdl2_path.split(split_chr) if sdl2_path else []
@@ -706,7 +705,7 @@ def determine_sdl2():
     if sdl2_flags:
         flags = merge(flags, sdl2_flags)
 
-    # ensure headers for all the SDL2 and sub libraries are available
+    # 确保所有的 SDL2 和子库的头部文件都可用
     libs_to_check = ['SDL', 'SDL_mixer', 'SDL_ttf', 'SDL_image']
     can_compile = True
     for lib in libs_to_check:
@@ -733,8 +732,8 @@ base_flags = determine_base_flags()
 gl_flags, gl_flags_base = determine_gl_flags()
 
 # -----------------------------------------------------------------------------
-# sources to compile
-# all the dependencies have been found manually with:
+# 源代码要编译所有手动找到的依赖关系，
+# 使用的命令是：
 # grep -inr -E '(cimport|include)' kivy/graphics/context_instructions.{pxd,pyx}
 graphics_dependencies = {
     'buffer.pyx': ['common.pxi'],
@@ -868,7 +867,7 @@ if c_options['use_pangoft2'] in (None, True) and platform not in (
         print(sources['core/text/_text_pango.pyx'])
 
 if platform in ('darwin', 'ios'):
-    # activate ImageIO provider for our core image
+    # 为我们的核心图片激活 ImageIO 供应器
     if platform == 'ios':
         osx_flags = {'extra_link_args': [
             '-framework', 'Foundation',
@@ -926,7 +925,7 @@ if c_options['use_gstreamer']:
             'depends': ['lib/gstplayer/_gstplayer.h']})
 
 # -----------------------------------------------------------------------------
-# extension modules
+# 扩展模块
 
 
 def get_dependencies(name, deps=None):
@@ -994,7 +993,7 @@ ext_modules = get_extensions_from_sources(sources)
 
 
 # -----------------------------------------------------------------------------
-# automatically detect data files
+# 自动检测数据文件
 split_examples = int(environ.get('KIVY_SPLIT_EXAMPLES', '0'))
 data_file_prefix = 'share/kivy-'
 examples = {}
@@ -1034,7 +1033,7 @@ def glob_paths(*patterns, excludes=('.pyc', )):
 
 
 # -----------------------------------------------------------------------------
-# setup !
+# 安装配置 !
 if not build_examples:
     install_requires = [
         'Kivy-Garden>=0.1.4', 'docutils', 'pygments'
